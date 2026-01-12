@@ -1,0 +1,27 @@
+#!/usr/bin/env sh
+
+# ==============================
+# Applications
+# ==============================
+alt - return : open -a  "Finder"
+alt - k      : open -na "kitty"
+alt - v      : open -a  "Visual Studio Code"
+alt - s      : open -a  "Spotify"
+alt - z      : open -a  "Zen"
+
+# ==============================
+# Yabai
+# ==============================
+    # focus
+ctrl + alt - left  : yabai -m window --focus west
+ctrl + alt - down  : yabai -m window --focus south
+ctrl + alt - up    : yabai -m window --focus north
+ctrl + alt - right : yabai -m window --focus east
+    # rotation
+ctrl + alt - r         : yabai -m space --rotate 270
+ctrl + alt + shift - r : yabai -m space --rotate 90
+    # misc
+ctrl - f : yabai -m window --toggle float && yabai -m window --grid 4:4:1:1:2:2
+ctrl - z : yabai -m window --toggle zoom-fullscreen
+ctrl - o : yabai -m window --toggle split
+ctrl - b : yabai -m space  --balance

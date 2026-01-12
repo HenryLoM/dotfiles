@@ -1,0 +1,82 @@
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+░█████╗░░█████╗░███╗░░██╗███████╗██╗░██████╗░
+██╔══██╗██╔══██╗████╗░██║██╔════╝██║██╔════╝░
+██║░░╚═╝██║░░██║██╔██╗██║█████╗░░██║██║░░██╗░
+██║░░██╗██║░░██║██║╚████║██╔══╝░░██║██║░░╚██╗
+╚█████╔╝╚█████╔╝██║░╚███║██║░░░░░██║╚██████╔╝
+░╚════╝░░╚════╝░╚═╝░░╚══╝╚═╝░░░░░╚═╝░╚═════╝░
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+
+// ===== INSTRUCTION =====
+// In the address bar, type about:support → click Profile Folder → open/create user.js.
+// Close Firefox, go to the end of the user.js file, paste this code, and save it. Done!
+// ===== =========== =====
+
+// Thin tabs and compact UI
+user_pref("browser.uidensity", 1);
+
+// Disable Pocket
+user_pref("extensions.pocket.api", "");
+user_pref("extensions.pocket.enabled", false);
+user_pref("extensions.pocket.site", "");
+user_pref("extensions.pocket.oAuthConsumerKey", "");
+
+// Disable full-screen video animation and "Press ESC to exit" hint
+user_pref("full-screen-api.transition-duration.enter", "0");
+user_pref("full-screen-api.transition-duration.leave", "0");
+user_pref("full-screen-api.warning.timeout", 0);
+
+// Ask websites not to track you
+user_pref("privacy.trackingprotection.enabled", true);
+user_pref("privacy.donottrackheader.enabled", true);
+
+// Disable telemetry and crash/usage reports
+user_pref("toolkit.telemetry.archive.enabled", false);
+user_pref("toolkit.telemetry.bhrPing.enabled", false);
+user_pref("toolkit.telemetry.cachedClientID", "");
+user_pref("toolkit.telemetry.firstShutdownPing.enabled", false);
+user_pref("toolkit.telemetry.hybridContent.enabled", false);
+user_pref("toolkit.telemetry.newProfilePing.enabled", false);
+user_pref("toolkit.telemetry.previousBuildID", "");
+user_pref("toolkit.telemetry.reportingpolicy.firstRun", false);
+user_pref("toolkit.telemetry.server", "");
+user_pref("toolkit.telemetry.server_owner", "");
+user_pref("toolkit.telemetry.shutdownPingSender.enabled", false);
+user_pref("toolkit.telemetry.unified", false);
+user_pref("toolkit.telemetry.updatePing.enabled", false);
+user_pref("toolkit.crashreporter.infoURL", "");
+user_pref("datareporting.healthreport.infoURL", "");
+user_pref("datareporting.healthreport.uploadEnabled", false);
+user_pref("datareporting.policy.dataSubmissionEnabled", false);
+user_pref("datareporting.policy.firstRunURL", "");
+user_pref("browser.tabs.crashReporting.sendReport", false);
+user_pref("browser.tabs.crashReporting.email", false);
+user_pref("browser.tabs.crashReporting.emailMe", false);
+user_pref("breakpad.reportURL", "");
+user_pref("security.ssl.errorReporting.automatic", false);
+user_pref("network.allow-experiments", false);
+user_pref("dom.ipc.plugins.reportCrashURL", false);
+user_pref("dom.ipc.plugins.flash.subprocess.crashreporter.enabled", false);
+user_pref("media.peerconnection.enabled", false);
+
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+███████╗██╗░░██╗████████╗███████╗███╗░░██╗░██████╗██╗░█████╗░███╗░░██╗░██████╗
+██╔════╝╚██╗██╔╝╚══██╔══╝██╔════╝████╗░██║██╔════╝██║██╔══██╗████╗░██║██╔════╝
+█████╗░░░╚███╔╝░░░░██║░░░█████╗░░██╔██╗██║╚█████╗░██║██║░░██║██╔██╗██║╚█████╗░
+██╔══╝░░░██╔██╗░░░░██║░░░██╔══╝░░██║╚████║░╚═══██╗██║██║░░██║██║╚████║░╚═══██╗
+███████╗██╔╝╚██╗░░░██║░░░███████╗██║░╚███║██████╔╝██║╚█████╔╝██║░╚███║██████╔╝
+╚══════╝╚═╝░░╚═╝░░░╚═╝░░░╚══════╝╚═╝░░╚══╝╚═════╝░╚═╝░╚════╝░╚═╝░░╚══╝╚═════╝░
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+
+𖣠 Block ads, trackers, and malicious scripts:
+Privacy Badger - https://addons.mozilla.org/firefox/addon/privacy-badger17/
+uBlock Origin  - https://addons.mozilla.org/firefox/addon/ublock-origin/
+
+𖣠 Force dark mode on all websites (specify in settings) & make it pretty:
+Dark Reader  - https://addons.mozilla.org/firefox/addon/darkreader/
+
+𖣠 Disable YouTube recommendations:
+Unhook - https://addons.mozilla.org/firefox/addon/youtube-recommended-videos/
+
+𖣠 Multi-proxy tab
+FoxyProxy - https://addons.mozilla.org/firefox/addon/foxyproxy-standard/
