@@ -33,10 +33,10 @@ tab_separator "◆︎"
 # Font
 # ==============================
 font_size 14
-font_family      Ubuntu Mono
+font_family      "JetBrains Mono"
 bold_font        Ubuntu Mono Bold
 italic_font      Ubuntu Mono Italic
-bold_italic_font Ubuntu Mono Bold Italic
+bold_italic_font auto
 
 # ==============================
 # Scrolling

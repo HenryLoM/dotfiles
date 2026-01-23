@@ -25,10 +25,7 @@ if status is-interactive
     set -gx HOMEBREW_NO_AUTO_UPDATE 1
     set -gx HOMEBREW_NO_ENV_HINTS   1
 
-    # ==============================
-    # Init
-    # ==============================
-
+    # Inits
     starship init fish | source
     zoxide   init fish | source
 
@@ -56,35 +53,17 @@ if status is-interactive
     alias skick  "skhd --restart-service"
     alias sslap  "skhd --stop-service"
 
-    # Quick updates default commands
+    # Updated default commands
     alias cdd "z"
     alias lss "eza -lh --icons"
-    
-    # Quick Debian VM
+    alias ccc "cc -std=c11 -Wall -Wextra -Wpedantic -Wconversion -Wshadow"
+
+    # Debian VM
     alias debian-cli 'docker run --rm -it debian:latest bash'
 
     # ==============================
     # Functions
     # ==============================
-
-    # Syncing my dotfiles in repository
-    function sync-dotfiles-repo
-            #  Sync environment directory with dotfiles repo (overwrite)
-        rm -rf "/Users/henrylom/My programs/Codeberg/dotfiles/.mylife/env"
-        cp -R "/Users/henrylom/.mylife/env" "/Users/henrylom/My programs/Codeberg/dotfiles/.mylife/env"
-            #  Define paths
-        set SRC "/Users/henrylom/.config"
-        set DST "/Users/henrylom/My programs/Codeberg/dotfiles/.config"
-            #  Ensure destination exists
-        mkdir -p "$DST"
-            #  Directories to sync
-        for dir in yabai skhd sketchybar salut macoscustoms kitty fish fastfetch borders
-            rm -rf "$DST/$dir"
-            cp -R "$SRC/$dir" "$DST/"
-        end
-            #  Single file to sync
-        cp -f "$SRC/starship.toml" "$DST/starship.toml"
-    end
 
     # Old "sudo !!"" trick
     function sudo
@@ -93,6 +72,25 @@ if status is-interactive
         else
             command sudo $argv
         end
+    end
+
+    # Sync my dotfiles in repository
+    function sync-dotfiles-repo
+            # Sync environment directory with dotfiles repo (overwrite)
+        rm -rf "/Users/henrylom/My programs/Codeberg/dotfiles/.mylife/env"
+        cp -R "/Users/henrylom/.mylife/env" "/Users/henrylom/My programs/Codeberg/dotfiles/.mylife/env"
+            # Define paths
+        set SRC "/Users/henrylom/.config"
+        set DST "/Users/henrylom/My programs/Codeberg/dotfiles/.config"
+            # Ensure destination exists
+        mkdir -p "$DST"
+            # Directories to sync
+        for dir in yabai skhd sketchybar macoscustoms kitty fish fastfetch borders
+            rm -rf "$DST/$dir"
+            cp -R "$SRC/$dir" "$DST/"
+        end
+            # Single file to sync
+        cp -f "$SRC/starship.toml" "$DST/starship.toml"
     end
 
 end

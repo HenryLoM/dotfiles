@@ -8,8 +8,7 @@
         darwin.url                    = "github:LnL7/nix-darwin";
         darwin.inputs.nixpkgs.follows = "nixpkgs";
         nix-homebrew.url              = "github:zhaofengli/nix-homebrew";
-
-        # Brew
+        # Homebrew taps
         homebrew-core = {
             url   = "github:Homebrew/homebrew-core";
             flake = false;
@@ -22,7 +21,7 @@
             url = "github:Homebrew/homebrew-bundle";
             flake = false;
         };
-        # Brew taps
+        # Extra taps
         formulae-yabai-skhd = {
             url   = "github:koekeishiya/homebrew-formulae";
             flake = false;
@@ -41,13 +40,39 @@
             
             system.primaryUser = "henrylom";
             
-            environment.systemPackages = import ./packages.nix { inherit pkgs; };
+            environment.systemPackages = import ./packages.nix { inherit pkgs; }; # system-wide packages
+            fonts.packages = with pkgs; [ jetbrains-mono ubuntu-classic ];        # system-wide fonts
 
             # ==============================
             # macOS UI tweaks
             # ==============================
-            system.defaults.dock.autohide                 = true;
-            system.defaults.NSGlobalDomain._HIHideMenuBar = true;
+            system.defaults = {
+                dock = {
+                    autohide          = true;   # hides dock
+                    show-recents      = false;  # turns off "show suggested and recent in dock"
+                    expose-group-apps = true;   # turns on  "group windows by application" in "mission control"
+                };
+
+                NSGlobalDomain = {
+                    _HIHideMenuBar      = true;             # hides menu bar 
+                    AppleInterfaceStyle = "Dark";           # sets "dark" in "appearance"
+                    AppleShowScrollBars = "WhenScrolling";  # sets "when scrolling" in "show scroll bars" in "windows"
+                };
+
+                trackpad = {
+                    Clicking = true; # turns on "tap to click"
+                };
+
+                controlcenter = {
+                    BatteryShowPercentage = true;  # shows percentage of the battery at the default menu bar
+                };
+
+                menuExtraClock = {
+                    ShowAMPM = true;        # shows AM/PM in the clock at the default menu bar
+                    ShowDate = 1;           # shows the date in the clock at the default menu bar
+                    ShowDayOfMonth = true;  # shows the day of the month in the clock at the default menu bar
+                };
+            };
 
             # ==============================
             # Force persistent hostname
@@ -95,11 +120,12 @@
                         "skhd"
                         "sketchybar"
                         "borders"
+                        "mole"
                         "switchaudio-osx"  # for sketchybar
                     ];
 
                     casks = [
-                        "docker"
+                        "docker-desktop"
                         "iina"
                         "sf-symbols"
                     ];

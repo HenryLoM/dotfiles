@@ -47,11 +47,15 @@ with pkgs;
     # Programming
     # ==============================
         # python
-    python314                     # python 3.14
+    python314                     # python 3.14 interpreter
     python314Packages.pip         # pip
     python314Packages.virtualenv  # venv
     uv                            # python package and project manager
     ruff                          # python linter and code formatter
+        # c
+    clang     # c/c++ compiler
+    cmake     # c build system
+    cppcheck  # c linter
         # docker
     docker          # docker cli
     docker-compose  # compose for yaml files
