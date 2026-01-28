@@ -8,6 +8,7 @@ settings_widget_height=26
 settings_border_width=2
 settings_icon_size=14.0
 settings_label_size=11.0
+settings_clocklabel_size=11.0
 settings_space_size=18.0
 
 # ==============================
@@ -37,3 +38,5 @@ settings_bar_blur_radius=0
 # ==============================
 settings_bar_y_offset=0
 settings_global_update_freq=30
+settings_fontfamily_regular="SF Pro"
+settings_fontfamily_mono="SF Mono"

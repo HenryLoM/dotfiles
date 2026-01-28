@@ -27,5 +27,5 @@ sketchybar --default \
     update_freq=$settings_global_update_freq \
     icon.color=$colors_icon \
     label.color=$colors_label \
-    icon.font="SF Pro:Bold:$settings_icon_size" \
-    label.font="SF Mono:Bold:$settings_label_size"
+    icon.font="$settings_fontfamily_regular:Bold:$settings_icon_size" \
+    label.font="$settings_fontfamily_mono:Bold:$settings_label_size"

@@ -7,11 +7,9 @@ with pkgs;
     # ==============================
     # Programs
     # ==============================
-    fish       # shell
-    kitty      # terminal
-    starship   # prompt
-    kew        # music player
-    yazi       # file manager
+    fish      # shell
+    kitty     # terminal
+    starship  # prompt
 
     # ==============================
     # Commands
@@ -24,14 +22,15 @@ with pkgs;
     lolcat  # rainbow "cat"
 
     # ==============================
-    # Editors
+    # TUI apps
     # ==============================
-    micro  # user-friendly code editor
-    vim    # complex code editor
-    nano   # simple text editor
+    vim   # complex code editor
+    nano  # simple text editor
+    yazi  # file manager
+    kew   # music player
 
     # ==============================
-    # Tools
+    # CLI tools
     # ==============================
     git       # version contol
     unar      # universal unarchiving tool
@@ -40,8 +39,8 @@ with pkgs;
     # ==============================
     # Cool, why not
     # ==============================
-    fastfetch       # system info print
-    cmatrix         # matrix rain
+    fastfetch  # system info print
+    cmatrix    # matrix rain
 
     # ==============================
     # Programming

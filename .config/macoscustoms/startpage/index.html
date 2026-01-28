@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Startpage</title>
+    <link   rel="stylesheet" href="style.css">
+    <script src="script.js"  defer></script>
+</head>
+<body>
+    <!-- ============================== -->
+    <!-- Settings section -->
+    <!-- ============================== -->
+    <button id="settingsButton" class="settings-button">
+        ⚙
+    </button>
+
+    <div id="settingsPanel" class="settings-panel hidden">
+        <h3>Search engine</h3>
+        <select id="engineSelect">
+            <option value="duckduckgo">DuckDuckGo</option>
+            <option value="google">Google</option>
+            <option value="yandex">Yandex</option>
+            <option value="startpage">Startpage</option>
+            <option value="perplexity">Perplexity</option>
+        </select>
+    </div>
+    
+    <!-- ============================== -->
+    <!-- Search section -->
+    <!-- ============================== -->
+    <main class="container">
+        <!-- Search -->
+        <div class="search">
+            <input
+                id="searchInput"
+                type="text"
+                placeholder="❯"
+                autocomplete="off"
+            >
+        </div>
+
+        <!-- ============================== -->
+        <!-- Cards section -->
+        <!-- ============================== -->
+        <div class="sections">
+
+            <!-- Social Media -->
+            <section class="card">
+                <h2>Social</h2>
+                <ul>
+                    <li><a href="https://web.telegram.org/k/"     > Telegram</a></li>
+                    <li><a href="https://web.whatsapp.com/"       > Whatsapp</a></li>
+                    <li><a href="https://discord.com/channels/@me"> Discord </a></li>
+                    <li><a href="https://www.reddit.com/"         > Reddit  </a></li>
+                    <li><a href="https://www.4chan.org/"          >ꕤ 4chan   </a></li>
+                </ul>
+            </section>
+
+            <!-- Work -->
+            <section class="card">
+                <h2>Work</h2>
+                <ul>
+                    <li><a href="https://github.com/HenryLoM/"  > GitHub  </a></li>
+                    <li><a href="https://codeberg.org/HenryLoM/"> Codeberg</a></li>
+                    <li><a href="https://drive.google.com/"     > Drive   </a></li>
+                    <li><a href="https://henrylom.itch.io/"     > Itch.io </a></li>
+                </ul>
+            </section>
+
+            <!-- Misc -->
+            <section class="card">
+                <h2>Misc</h2>
+                <ul>
+                    <li><a href="https://www.youtube.com/"                > Youtube </a></li>
+                    <li><a href="https://e.mail.ru/"                      >󰁥 Mail.ru </a></li>
+                    <li><a href="https://chatgpt.com/?temporary-chat=true">֎ ChatGPT </a></li>
+                    <li><a href="https://grok.com/"                       >𝐆 Grok    </a></li>
+                    <li><a href="https://chat.deepseek.com/"              >⛵︎ DeepSeek</a></li>
+                </ul>
+            </section>
+        </div>
+    </main>
+</body>
+</html>

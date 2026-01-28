@@ -1,0 +1,203 @@
+/* ============================== */
+/* Fonts */
+/* ============================== */
+@font-face {
+    font-family: "NerdFont_MonoSymbols";
+    src: url("./fonts/NerdFont_MonoSymbols.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Ubuntu_MonoRegular";
+    src: url("./fonts/Ubuntu_MonoRegular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* ============================== */
+/* Base */
+/* ============================== */
+:root {
+    /* Background / Foreground */
+    --bg:      #1e1e2e;
+    --fg:      #cdd6f4;
+    --muted:   #a6adc8;
+    --surface: #181825;
+
+    /* Accents */
+    --color0: #45475a;
+    --color1: #f38ba8;
+    --color2: #a6e3a1;
+    --color3: #f9e2af;
+    --color4: #89b4fa;
+    --color5: #cba7f7;
+    --color6: #94e2d5;
+    --color7: #cdd6f4;
+
+    /* Settings */
+    --radius: 4px;
+}
+
+* {
+    font-family:
+        "Ubuntu_MonoRegular",    /* Primary font for text */
+        "NerdFont_MonoSymbols";  /* Secondary font for symbols/icons */
+    box-sizing: border-box;
+}
+
+/* ============================== */
+/* Elements */
+/* ============================== */
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+}
+
+/* ============================== */
+/* Container */
+/* ============================== */
+.container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+}
+
+/* ============================== */
+/* Search */
+/* ============================== */
+.search input {
+    width: 724px;
+    padding: 14px 18px;
+    font-size: 18px;
+    color: var(--fg);
+    background: var(--surface);
+    border: 2px solid transparent;
+    border-radius: var(--radius);
+    outline: none;
+    transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.search input::placeholder {
+    color: var(--muted);
+}
+
+.search input:hover {
+    cursor: text;
+    border-color: var(--color5);
+}
+
+.search input:focus {
+    border-color: var(--color5);
+}
+
+/* ============================== */
+/* Cards */
+/* ============================== */
+
+.sections {
+    display: grid;
+    grid-template-columns: repeat(3, 220px);
+    gap: 32px;
+}
+
+.card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 20px;
+}
+
+.card h2 {
+    margin: 0 0 12px 0;
+    font-size: 18px;
+    color: var(--color4);
+    transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.card li + li {
+    margin-top: 8px;
+}
+
+.card a {
+    color: var(--fg);
+    text-decoration: none;
+    font-size: 15px;
+    transition: color 0.07s ease, border-color 0.15s ease;
+}
+
+.card a:hover {
+    color: var(--color4);
+}
+
+.card:hover h2 {
+    color: var(--color5);
+}
+
+/* ============================== */
+/* Settings */
+/* ============================== */
+
+.settings-button {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    background: var(--surface);
+    color: var(--fg);
+    border: none;
+    border-radius: var(--radius);
+    padding: 8px 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.settings-button:hover {
+    color: var(--color5);
+}
+
+.settings-panel {
+    position: fixed;
+    top: 56px;
+    right: 16px;
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 14px;
+    width: 180px;
+
+    opacity: 0;
+    transform: translateY(-6px);
+    pointer-events: none;
+
+    transition:
+        opacity 0.15s ease,
+        transform 0.15s ease;
+}
+
+.settings-panel h3 {
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    color: var(--color4);
+}
+
+.settings-panel.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}

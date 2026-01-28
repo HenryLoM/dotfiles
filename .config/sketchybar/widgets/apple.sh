@@ -17,4 +17,4 @@ sketchybar --add item apple left \
         background.drawing=off \
         icon.padding_left=0 \
         icon.padding_right=$settings_locked_apple_padding_right \
-        icon.font="SF Pro:SemiBold:$settings_space_size"
+        icon.font="$settings_fontfamily_regular:SemiBold:$settings_space_size"

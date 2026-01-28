@@ -24,7 +24,7 @@ sketchybar --add item clock right \
         icon.padding_right=$settings_icon_padding_right \
         label.padding_left=$settings_label_padding_left \
         label.padding_right=$settings_label_padding_right \
-        label.font="SF Pro:Bold:$settings_label_size" \
+        label.font="$settings_fontfamily_regular:Bold:$settings_clocklabel_size" \
         update_freq=$settings_global_update_freq \
         script="sketchybar --set \$NAME label=\"\$(date '+%d %b %I:%M %p')\""
         

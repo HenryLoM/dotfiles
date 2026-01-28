@@ -30,6 +30,10 @@
             url   = "github:felixkratz/homebrew-formulae";
             flake = false;
         };
+        formulae-boringnotch = {
+            url   = "github:TheBoredTeam/homebrew-boring-notch";
+            flake = false;
+        };
     };
 
     outputs = { self, darwin, nixpkgs, nix-homebrew, ... } @ inputs: let
@@ -40,8 +44,8 @@
             
             system.primaryUser = "henrylom";
             
-            environment.systemPackages = import ./packages.nix { inherit pkgs; }; # system-wide packages
-            fonts.packages = with pkgs; [ jetbrains-mono ubuntu-classic ];        # system-wide fonts
+            environment.systemPackages = import ./packages.nix { inherit pkgs; };    # system-wide packages
+            fonts.packages = with pkgs; [ ubuntu-classic nerd-fonts.symbols-only ];  # system-wide fonts
 
             # ==============================
             # macOS UI tweaks
@@ -60,7 +64,7 @@
                 };
 
                 trackpad = {
-                    Clicking = true; # turns on "tap to click"
+                    Clicking = true;  # turns on "tap to click"
                 };
 
                 controlcenter = {
@@ -100,6 +104,7 @@
                         # Extra
                         "koekeishiya/homebrew-formulae-yabai-skhd"         = inputs.formulae-yabai-skhd;
                         "koekeishiya/homebrew-formulae-sketchybar-borders" = inputs.formulae-sketchybar-borders;
+                        "TheBoredTeam/homebrew-boring-notch"               = inputs.formulae-boringnotch;
                     };
                     mutableTaps = false;
             };
@@ -116,18 +121,21 @@
                     };
 
                     brews = [
-                        "yabai"
-                        "skhd"
-                        "sketchybar"
-                        "borders"
-                        "mole"
-                        "switchaudio-osx"  # for sketchybar
+                        "yabai"            # Window Manager (WM)
+                        "skhd"             # Shortcuts & Hotkeys
+                        "sketchybar"       # Custom Menu Bar
+                        "borders"          # Borders around windows
+                        "mole"             # TUI system cleaner
+                        "switchaudio-osx"  # CLI spund-source manager
                     ];
 
                     casks = [
-                        "docker-desktop"
-                        "iina"
-                        "sf-symbols"
+                        "docker-desktop"  # Docker GUI
+                        "iina"            # Video player
+                        "sf-symbols"      # San-Francisco font support
+                        "font-sf-mono"    # San-Francisco Mono font
+                        "boring-notch"    # Island-like behavior utility
+                        "hiddenbar"       # Hiding menu bar icons utility
                     ];
             };
 

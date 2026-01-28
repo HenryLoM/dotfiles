@@ -48,4 +48,4 @@ sketchybar --add item battery.popup popup.battery \
                  label.padding_right=$settings_label_padding_right \
                  label="??:??h" \
                  label.align=right \
-                 icon.font="SF Pro:Bold:$settings_label_size"
+                 icon.font="$settings_fontfamily_regular:Bold:$settings_label_size"
