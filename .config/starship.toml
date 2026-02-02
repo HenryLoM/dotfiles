@@ -16,7 +16,7 @@ style = "bold"
 truncation_length = 3
 
 [git_branch]
-format = "[ | 🌿 ($branch)]($style)"
+format = "[ |   ($branch)]($style)"
 style = "bold"
 
 [git_status]
@@ -24,7 +24,7 @@ format = "[$all_status$ahead_behind]($style)"
 style = "bold"
 
 [python]
-format = '[ | 🐍 ($virtualenv)]($style)'
+format = '[ |   ($virtualenv)]($style)'
 style = "bold"
 detect_env_vars = ["VIRTUAL_ENV"]
 detect_extensions = []

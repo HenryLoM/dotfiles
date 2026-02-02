@@ -85,7 +85,7 @@ if status is-interactive
             # Ensure destination exists
         mkdir -p "$DST"
             # Directories to sync
-        for dir in yabai skhd sketchybar macoscustoms kitty fish fastfetch borders
+        for dir in yabai skhd sketchybar borders customs fish kitty fastfetch
             rm -rf "$DST/$dir"
             cp -R "$SRC/$dir" "$DST/"
         end
@@ -99,6 +99,6 @@ end
 # External paths
 # ==============================
 
-fish_add_path /Users/henrylom/.config/macoscustoms/binaries                       # custom binaries
+fish_add_path $HOME/.config/customs/binaries                                      # custom binaries
 fish_add_path "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/"  # "code" command
-fish_add_path /Users/henrylom/.spicetify                                          # spicefy
+fish_add_path $HOME/.spicetify                                                    # spicefy
