@@ -1,6 +1,6 @@
 # flake.nix
 {
-    description = "My CLI packages and macOS configuration";
+    description = "My packages and macOS configuration";
 
     inputs = {
         # Must have
@@ -51,6 +51,13 @@
             # macOS UI tweaks
             # ==============================
             system.defaults = {
+                finder = {
+                    NewWindowTarget = "Home";       # Default directory is $HOME
+                    ShowPathbar = true;             # Shows pathbar
+                    AppleShowAllFiles = true;       # Shows hidden files
+                    AppleShowAllExtensions = true;  # Show all extensions
+                };
+
                 dock = {
                     autohide          = true;   # hides dock
                     show-recents      = false;  # turns off "show suggested and recent in dock"

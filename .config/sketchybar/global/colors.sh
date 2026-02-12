@@ -4,8 +4,8 @@
 # Find Kitty's colors config
 # ==============================
 kitty_conf="$HOME/.config/kitty/colors.conf"
-[ ! -f "$kitty_conf" ] && kitty_conf="$HOME/.config/kitty/kitty.conf"
-[ ! -f "$kitty_conf" ] && { echo "❌ Kitty config not found"; exit 1; }
+[ ! -f "$kitty_conf" ] && kitty_conf="$HOME/.config/kitty/colors.conf"
+[ ! -f "$kitty_conf" ] && { echo "✖ Kitty config not found ✖"; exit 1; }
 
 # ==============================
 # Convert #RRGGBB → 0xAARRGGBB
@@ -39,7 +39,7 @@ done
 # Titled
 # ==============================
 colors_bar=$(hex2ahex cc "$KITTY_background")
-colors_widget=$(hex2ahex cc "$KITTY_background")
+colors_widget=0x00000000
 colors_border=0x00000000
 colors_icon=$(hex2ahex ff "$KITTY_color5")
 colors_label=$(hex2ahex ff "$KITTY_color4")

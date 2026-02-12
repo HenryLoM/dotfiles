@@ -34,10 +34,10 @@ if status is-interactive
     # ==============================
 
     # Quick Nix management
-    alias nix-first-run      'sudo nix run nix-darwin --extra-experimental-features "nix-command flakes" -- switch --flake ~/.mylife/env/#darwin'
-    alias nix-update         "sudo darwin-rebuild switch --flake ~/.mylife/env/#darwin"
-    alias nix-lock-update    'sudo nix --extra-experimental-features "nix-command flakes" flake update --flake ~/.mylife/env'
-    alias nix-cleanup        "nix-collect-garbage"
+    alias nix-first-run    'sudo nix run nix-darwin --extra-experimental-features "nix-command flakes" -- switch --flake ~/.mylife/env/#darwin'
+    alias nix-update       "sudo darwin-rebuild switch --flake ~/.mylife/env/#darwin"
+    alias nix-lock-update  'sudo nix --extra-experimental-features "nix-command flakes" flake update --flake ~/.mylife/env'
+    alias nix-cleanup      "nix-collect-garbage"
 
     # Quick daemon runners
         # for brew
@@ -72,6 +72,16 @@ if status is-interactive
         else
             command sudo $argv
         end
+    end
+
+    # Metadata cleaner
+    function clean-metadata
+            # macOS info
+        xattr -c $argv
+        xattr -rc $argv
+            # Generic metadata
+        exiftool -all= -overwrite_original $argv
+        exiftool -all= -overwrite_original -r $argv
     end
 
     # Sync my dotfiles in repository

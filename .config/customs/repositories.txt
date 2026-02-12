@@ -1,0 +1,10 @@
+𖣠 Binaries
+⁃ boomtypr   𐃘 https://github.com/yagnikpt/boomtypr
+⁃ dawn       𐃘 https://github.com/andrewmd5/dawn
+
+𖣠 macOS
+⁃ yabai      𐃘 https://github.com/asmvik/yabai
+⁃ skhd       𐃘 https://github.com/asmvik/skhd
+⁃ sketchybar 𐃘 https://github.com/FelixKratz/SketchyBar
+⁃ borders    𐃘 https://github.com/FelixKratz/JankyBorders
+⁃ mole       𐃘 https://github.com/tw93/Mole

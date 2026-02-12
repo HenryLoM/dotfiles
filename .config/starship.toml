@@ -7,7 +7,7 @@ $character
 
 [character]
 success_symbol = "❯ "
-error_symbol   = "✗ "
+error_symbol   = "✖ "
 vicmd_symbol   = "❯ "
 
 [directory]
