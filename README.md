@@ -48,9 +48,9 @@ This repo exists to save the configuration and image of my working machine — s
 | Command | Purpose | Raw version |
 |---------|---------|-------------|
 | `nix-first-run` | Runs nix as for the first time | `sudo nix run nix-darwin --extra-experimental-features "nix-command flakes" -- switch --flake ~/.mylife/env/#darwin` |
-| `nix-update` | Updates the system-wide packages | `sudo darwin-rebuild switch --flake ~/.mylife/env/#darwin` |
+| `nix-update` | Updates system-wide packages | `sudo darwin-rebuild switch --flake ~/.mylife/env/#darwin` |
 | `nix-lock-update` | Updates packages in flake.lock | `sudo nix --extra-experimental-features "nix-command flakes" flake update --flake ~/.mylife/env` |
-| `nix-cleanup` | Collects garbage and cache (warning: this will slow down the next update) | `nix-collect-garbage` |
+| `nix-cleanup` | Collects garbage and cache | `nix-collect-garbage` |
 
 ## 📸 Result
 ![result](result.png)

@@ -10,6 +10,7 @@
     "display": {
         "separator": " ",
         "size": {
+            "binaryPrefix": "jedec",
             "maxPrefix": "GB",
             "ndigits": 0
         }
@@ -21,19 +22,22 @@
             "type": "os",
             "key": "┃ os       ┣",
             "keyColor": "magenta",
-            "outputColor": "blue"
+            "outputColor": "blue",
+            "format": "{name} {codename}"
         },
         {
             "type": "shell",
             "key": "┃ shell    ┣",
             "keyColor": "magenta",
-            "outputColor": "blue"
+            "outputColor": "blue",
+            "format": "{pretty-name}"
         },
         {
             "type": "terminal",
             "key": "┃ terminal ┣",
             "keyColor": "magenta",
-            "outputColor": "blue"
+            "outputColor": "blue",
+            "format": "{pretty-name}"
         },
         {
             "type": "packages",

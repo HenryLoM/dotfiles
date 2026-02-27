@@ -5,7 +5,7 @@ with pkgs;
 
 [
     # ==============================
-    # Programs
+    # Shell & Terminal
     # ==============================
     fish      # shell    𐃘 https://github.com/fish-shell/fish-shell
     kitty     # terminal 𐃘 https://github.com/kovidgoyal/kitty
@@ -18,23 +18,25 @@ with pkgs;
     fzf     # fuzzy search           𐃘 https://github.com/junegunn/fzf
     zoxide  # better "cd"            𐃘 https://github.com/ajeetdsouza/zoxide
     eza     # better "ls"            𐃘 https://github.com/eza-community/eza
-    bat     # pretty print of a code 𐃘 https://github.com/sharkdp/bat
+    bat     # pretty code print      𐃘 https://github.com/sharkdp/bat
 
     # ==============================
-    # TUI apps
+    # TUI programs
     # ==============================
-    vim   # complex code editor 𐃘 https://github.com/vim/vim
-    nano  # simple text editor  𐃘 https://github.com/madnight/nano
-    yazi  # file manager        𐃘 https://github.com/sxyazi/yazi
-    kew   # music player        𐃘 https://github.com/ravachol/kew
-    htop  # process viewer      𐃘 https://github.com/htop-dev/htop
+    vim   # complex code editor        𐃘 https://github.com/vim/vim
+    nano  # simple text editor         𐃘 https://github.com/madnight/nano
+    yazi  # file manager               𐃘 https://github.com/sxyazi/yazi
+    kew   # music player               𐃘 https://github.com/ravachol/kew
+    htop  # interactive process viewer 𐃘 https://github.com/htop-dev/htop
+    gtop  # monitoring process viewer  𐃘 https://github.com/aksakalli/gtop
 
     # ==============================
     # CLI tools
     # ==============================
-    git       # version contol             𐃘 https://github.com/git/git
-    unar      # universal unarchiving tool 𐃘 https://github.com/ashang/unar
-    exiftool  # meta-data reader + cleaner 𐃘 https://github.com/exiftool/exiftool
+    git       # version contol               𐃘 https://github.com/git/git
+    unar      # universal unarchiving tool   𐃘 https://github.com/ashang/unar
+    exiftool  # meta-data reader + cleaner   𐃘 https://github.com/exiftool/exiftool
+    i2pd      # Anonymous I2P network router 𐃘 https://github.com/PurpleI2P/i2pd
 
     # ==============================
     # Cool, why not
@@ -56,7 +58,14 @@ with pkgs;
     clang     # c/c++ compiler
     cmake     # c build system
     cppcheck  # c linter
+        # rust
+    rustc  # rust compiler
+    cargo  # rust package manager
         # docker
     docker          # docker cli
     docker-compose  # compose for yaml files
+        # misc
+    go      # go compiler and toolchain
+    nodejs  # node runtime
+    php     # php server
 ]

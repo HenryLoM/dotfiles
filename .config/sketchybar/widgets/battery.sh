@@ -25,10 +25,10 @@ sketchybar --add item battery right \
                  label.padding_left=$settings_label_padding_left \
                  label.padding_right=$settings_label_padding_right \
                  popup.align=center \
-                 popup.background.color=$colors_widget \
+                 popup.background.color=$colors_widget_popup \
                  popup.background.corner_radius=$settings_widget_corner_radius \
                  popup.background.border_width=$settings_border_width \
-                 popup.background.border_color=$colors_border \
+                 popup.background.border_color=$colors_border_popup \
                  popup.background.height=$settings_widget_height \
                  script="$CONFIG_DIR/helpers/battery_scripts.sh update" \
                  click_script="$CONFIG_DIR/helpers/battery_scripts.sh click" \

@@ -18,7 +18,7 @@ yabai -m config window_gap     4
 # ==============================
 # Windows - special cases
 # ==============================
-yabai -m config --space 5 top_padding 10
+yabai -m config --space 5 top_padding    10
 yabai -m config --space 5 bottom_padding 24
 
 # ==============================
@@ -33,13 +33,13 @@ yabai -m config mouse_drop_action swap
 # ==============================
 # Exceptions
 # ==============================
-yabai -m rule --add app="^Finder$" manage=off
-yabai -m rule --add app="^System Settings$" manage=off
+yabai -m rule --add app="^Finder$"           manage=off
+yabai -m rule --add app="^System Settings$"  manage=off
 yabai -m rule --add app="^Activity Monitor$" manage=off
-yabai -m rule --add app="^Spotify$" manage=off
-yabai -m rule --add app="^V2BOX$" manage=off
-yabai -m rule --add title="Preferences$" manage=off
-yabai -m rule --add title="Settings$" manage=off
+yabai -m rule --add app="^Spotify$"          manage=off
+yabai -m rule --add app="^V2BOX$"            manage=off
+yabai -m rule --add title="Preferences$"     manage=off
+yabai -m rule --add title="Settings$"        manage=off
 
 # ==============================
 # Window misc
