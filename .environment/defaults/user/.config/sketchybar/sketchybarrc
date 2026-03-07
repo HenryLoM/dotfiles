@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# Globals
+. "$(dirname "$0")/global/source.sh"
+
+# Left side
+. "$(dirname "$0")/widgets/apple.sh"    # apple logo
+. "$(dirname "$0")/spaces/spaces.sh"    # spaces
+
+# Right side
+. "$(dirname "$0")/widgets/clock.sh"    # clock
+. "$(dirname "$0")/widgets/battery.sh"  # battery
+. "$(dirname "$0")/widgets/volume.sh"   # volume
+. "$(dirname "$0")/widgets/trash.sh"    # trash
+
+# Initial update
+sketchybar --update

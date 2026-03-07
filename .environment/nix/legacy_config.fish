@@ -7,10 +7,19 @@ if status is-interactive
     # Disable fish greeting
     set fish_greeting ""
 
+    # Load Nix daemon if it exists
+    if test -e /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.fish
+        source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.fish
+    end
+
     # Path hierarchy
     set -gx PATH                   \
+        /run/current-system/sw/bin \
         /opt/homebrew/bin          \
         $PATH
+    
+    # Golang path
+    set -gx GOPATH $HOME/.cache/go
 
     # Disable auto-updates and env hints for nix-homebrew
     set -gx HOMEBREW_NO_AUTO_UPDATE 1
@@ -24,9 +33,11 @@ if status is-interactive
     # Aliases
     # ==============================
 
-    # Quick Brewfile management
-    alias bb-update  "brew bundle --file=~/.environment/brew/Brewfile"
-    alias bb-cleanup "brew bundle --file=~/.environment/brew/Brewfile --force cleanup"
+    # Quick Nix management
+    alias nix-first-run   'sudo nix run nix-darwin --extra-experimental-features "nix-command flakes" -- switch --flake ~/.mylife/env/#darwin'
+    alias nix-update      "sudo darwin-rebuild switch --flake ~/.mylife/env/#darwin"
+    alias nix-lock-update 'sudo nix --extra-experimental-features "nix-command flakes" flake update --flake ~/.mylife/env'
+    alias nix-cleanup     "nix-collect-garbage"
 
     # Quick daemon runners
         # for brew
@@ -46,9 +57,6 @@ if status is-interactive
     alias cd "z"
     alias ls "eza -lh --icons"
     alias cc "cc -std=c11 -Wall -Wextra -Wpedantic -Wconversion -Wshadow"
-
-    # Why not?
-    alias woman "man"
 
     # Debian VM
     alias debian-cli 'docker run --rm -it debian:latest bash'
@@ -76,19 +84,23 @@ if status is-interactive
         exiftool -all= -overwrite_original -r $argv
     end
 
-    # Sync my dotfiles with .mylife
-    function sync-environment
+    # Sync my dotfiles in repository
+    function sync-dotfiles-repo
+            # Sync environment directory with dotfiles repo (overwrite)
+        rm -rf "/Users/henrylom/My programs/Codeberg/dotfiles/.mylife/env"
+        cp -R "/Users/henrylom/.mylife/env" "/Users/henrylom/My programs/Codeberg/dotfiles/.mylife/env"
             # Define paths
-        set SRC  "$HOME/.config"
-        set DST  "$HOME/.environment/defaults/user/.config"
-        set ENV  "$HOME/.environment"
-        set REPO "$HOME/myprogs/Codeberg/dotfiles"
-            # Sync dotfiles
-        cp -f "$SRC/starship.toml" "$DST/starship.toml"
+        set SRC "/Users/henrylom/.config"
+        set DST "/Users/henrylom/My programs/Codeberg/dotfiles/.config"
+            # Ensure destination exists
+        mkdir -p "$DST"
+            # Directories to sync
         for dir in yabai skhd sketchybar borders customs fish kitty fastfetch
             rm -rf "$DST/$dir"
-            cp -R "$SRC/$dir" "$DST"
+            cp -R "$SRC/$dir" "$DST/"
         end
+            # Single file to sync
+        cp -f "$SRC/starship.toml" "$DST/starship.toml"
     end
 
 end

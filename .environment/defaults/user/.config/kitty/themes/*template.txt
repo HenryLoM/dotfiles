@@ -1,0 +1,42 @@
+# ==============================
+# THEME NAME
+# ==============================
+
+# ==============================
+# Background and Foreground
+# ==============================
+background           #base_color
+foreground           #white
+selection_background #light_black
+selection_foreground #favorite_color
+cursor               #favorite_color
+macos_titlebar_color #base_color
+
+# ==============================
+# Tabs
+# ==============================
+active_tab_background   #white
+active_tab_foreground   #base_color
+inactive_tab_background #darker_base_color
+inactive_tab_foreground #light_white
+
+# ==============================
+# ANSI Colors (0–15)
+# ==============================
+color0  #black
+color1  #red
+color2  #green
+color3  #yellow
+color4  #blue
+color5  #magenta
+color6  #cyan
+color7  #white
+
+color8  #light_black
+color9  #light_red
+color10 #light_green
+color11 #light_yellow
+color12 #light_blue
+color13 #light_magenta
+color14 #light_cyan
+color15 #light_white

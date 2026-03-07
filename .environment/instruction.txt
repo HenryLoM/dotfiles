@@ -1,0 +1,83 @@
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+█▄▄ █▀█ █▀▀ █░█░█
+█▄█ █▀▄ ██▄ ▀▄▀▄▀
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+
+𖣠 Installation
+『/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.bashrc
+eval "$(/opt/homebrew/bin/brew shellenv)"』
+
+𖣠 Cleanup
+『brew cleanup』
+
+𖣠 Brewfile management
+⁃ Install 𐃘 『brew bundle install』
+⁃ Cleanup 𐃘 『brew bundle cleanup --global --force』
+
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+█▄░█ █ ▀▄▀
+█░▀█ █ █░█
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+
+𖣠 Installation
+『curl -L https://nixos.org/nix/install | sh』
+
+𖣠 Cleanup
+『nix-collect-garbage』
+
+𖣠 Unlink packages
+1)『nix profile remove <title the packages are under>』
+2)『nix profile remove --all』
+
+𖣠 Binary deletion
+1) 『nix store gc』
+2) 『nix-collect-garbage -d』
+
+𖣠 Flake management
+⁃ First run 𐃘 『sudo nix run nix-darwin --extra-experimental-features "nix-command flakes" -- switch --flake .#<name of the build in the flake>』
+⁃ Run       𐃘 『nix run nix-darwin -- switch --flake .#<name of the build in the flake>』
+⁃ Update    𐃘 『nix flake update』
+⁃ Roll back 𐃘 『nix run nix-darwin -- switch --rollback』
+
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+█▀█ ▄▀█ ▀█▀ █░█ █▀
+█▀▀ █▀█ ░█░ █▀█ ▄█
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+
+𖣠 Environment itself
+.environment/ 𐃘 ~/.environment/
+
+𖣠 User
+.hushlogin 𐃘 ~/.hushlogin
+.vimrc     𐃘 ~/.vimrc
+.config/   𐃘 ~/.config/
+
+𖣠 System-wide
+⁃ bashrc 𐃘 /etc/bashrc
+⁃ zshrc  𐃘 /etc/zshrc
+
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+█▄▄ █ █▄░█ ▄▀█ █▀█ █ █▀▀ █▀
+█▄█ █ █░▀█ █▀█ █▀▄ █ ██▄ ▄█
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+
+𖣠 macOS
+⁃ yabai      𐃘 https://github.com/asmvik/yabai            𐃘 windows manager
+⁃ skhd       𐃘 https://github.com/asmvik/skhd             𐃘 hotkey daemon
+⁃ sketchybar 𐃘 https://github.com/FelixKratz/SketchyBar   𐃘 customizable menu bar
+⁃ borders    𐃘 https://github.com/FelixKratz/JankyBorders 𐃘 extra borders
+⁃ mole       𐃘 https://github.com/tw93/Mole               𐃘 TUI uninstaller
+
+𖣠 Terminal
+⁃ fish     𐃘 https://github.com/fish-shell/fish-shell 𐃘 shell
+⁃ kitty    𐃘 https://github.com/kovidgoyal/kitty      𐃘 terminal
+⁃ starship 𐃘 https://github.com/starship/starship     𐃘 prompt
+
+𖣠 TUI programs
+⁃ boomtypr   𐃘 https://github.com/yagnikpt/boomtypr   𐃘 typing test
+⁃ termrex    𐃘 https://github.com/SATYADAHAL/termrex  𐃘 chrome t-rex game
+⁃ tetro-tui  𐃘 https://github.com/Strophox/tetro-tui  𐃘 tetris
+⁃ dawn       𐃘 https://github.com/andrewmd5/dawn      𐃘 writing environment
+⁃ bookokrat  𐃘 https://github.com/bugzmanov/bookokrat 𐃘 book reader
