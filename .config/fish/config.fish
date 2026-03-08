@@ -8,8 +8,9 @@ if status is-interactive
     set fish_greeting ""
 
     # Path hierarchy
-    set -gx PATH                   \
-        /opt/homebrew/bin          \
+    set -gx PATH                        \
+        /opt/homebrew/bin               \
+        $HOME/.environment/defaults/bin \
         $PATH
 
     # Disable auto-updates and env hints for nix-homebrew
@@ -85,7 +86,7 @@ if status is-interactive
         set REPO "$HOME/myprogs/Codeberg/dotfiles"
             # Sync dotfiles
         cp -f "$SRC/starship.toml" "$DST/starship.toml"
-        for dir in yabai skhd sketchybar borders customs fish kitty fastfetch
+        for dir in yabai skhd sketchybar borders fish kitty fastfetch
             rm -rf "$DST/$dir"
             cp -R "$SRC/$dir" "$DST"
         end
@@ -97,6 +98,5 @@ end
 # External paths
 # ==============================
 
-fish_add_path $HOME/.config/customs/binaries                                      # custom binaries
 fish_add_path "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/"  # "code" command
 fish_add_path $HOME/.spicetify                                                    # spicetify

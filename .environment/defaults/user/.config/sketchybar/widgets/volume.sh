@@ -31,5 +31,4 @@ sketchybar --add item volume right \
                  popup.background.height=$settings_widget_height \
                  update_freq=0 \
                  script="$CONFIG_DIR/helpers/volume_scripts.sh" \
-                 click_script="$CONFIG_DIR/helpers/volume_scripts.sh" \
-           --subscribe volume volume_change mouse.clicked
+           --subscribe volume volume_change

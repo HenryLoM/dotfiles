@@ -10,6 +10,8 @@ tap "FelixKratz/formulae"
 # ==============================
 cask "docker-desktop"                                   # docker gui        𐃘 https://github.com/docker/for-mac
 cask "visual-studio-code"                               # code editor       𐃘 https://github.com/microsoft/vscode
+cask "simplex"                                          # e2e messanger     𐃘 https://github.com/simplex-chat/simplex-chat
+cask "session"                                          # onion messanger   𐃘 https://github.com/session-foundation/session-desktop
 cask "iina"                                             # video player      𐃘 https://github.com/iina/iina
 cask "TheBoredTeam/homebrew-boring-notch/boring-notch"  # notch enhancer    𐃘 https://github.com/TheBoredTeam/boring.notch
 cask "hiddenbar"                                        # menu bar hider    𐃘 https://github.com/dwarvesf/hidden
@@ -22,12 +24,6 @@ cask "maccy"                                            # clipboard manager 𐃘
 brew "fish"      # shell    𐃘 https://github.com/fish-shell/fish-shell
 cask "kitty"     # terminal 𐃘 https://github.com/kovidgoyal/kitty
 brew "starship"  # prompt   𐃘 https://github.com/starship/starship
-        # Commands
-brew "tree"    # classic directory tree 𐃘 https://github.com/Old-Man-Programmer/tree
-brew "fzf"     # fuzzy search           𐃘 https://github.com/junegunn/fzf
-brew "zoxide"  # better "cd"            𐃘 https://github.com/ajeetdsouza/zoxide
-brew "eza"     # better "ls"            𐃘 https://github.com/eza-community/eza
-brew "bat"     # pretty code print      𐃘 https://github.com/sharkdp/bat
         # TUI programs
 brew "vim"   # complex code editor        𐃘 https://github.com/vim/vim
 brew "nano"  # simple text editor         𐃘 https://github.com/madnight/nano
@@ -35,11 +31,17 @@ brew "yazi"  # file manager               𐃘 https://github.com/sxyazi/yazi
 brew "kew"   # music player               𐃘 https://github.com/ravachol/kew
 brew "htop"  # interactive process viewer 𐃘 https://github.com/htop-dev/htop
 brew "gtop"  # monitoring process viewer  𐃘 https://github.com/aksakalli/gtop
+        # Commands
+brew "tree"    # classic directory tree 𐃘 https://github.com/Old-Man-Programmer/tree
+brew "fzf"     # fuzzy search           𐃘 https://github.com/junegunn/fzf
+brew "zoxide"  # better "cd"            𐃘 https://github.com/ajeetdsouza/zoxide
+brew "eza"     # better "ls"            𐃘 https://github.com/eza-community/eza
+brew "bat"     # pretty code print      𐃘 https://github.com/sharkdp/bat
         # ClI tools
-brew "git"       # version contol               𐃘 https://github.com/git/git
-brew "unar"      # universal unarchiving tool   𐃘 https://github.com/ashang/unar
-brew "exiftool"  # meta-data reader + cleaner   𐃘 https://github.com/exiftool/exiftool
-brew "i2pd"      # Anonymous I2P network router 𐃘 https://github.com/PurpleI2P/i2pd
+brew "git"       # version contol             𐃘 https://github.com/git/git
+brew "unar"      # universal unarchiving tool 𐃘 https://github.com/ashang/unar
+brew "exiftool"  # meta-data reader + cleaner 𐃘 https://github.com/exiftool/exiftool
+brew "i2pd"      # I2P network router         𐃘 https://github.com/PurpleI2P/i2pd
         # Cool, why not
 brew "fastfetch"  # system info print 𐃘 https://github.com/fastfetch-cli/fastfetch
 brew "cmatrix"    # matrix rain       𐃘 https://github.com/abishekvashok/cmatrix
@@ -47,14 +49,13 @@ brew "lolcat"     # rainbow "cat"     𐃘 https://github.com/busyloop/lolcat
 brew "pipes-sh"   # pipes screensaver 𐃘 https://github.com/pipeseroni/pipes.sh
 
 # ==============================
-# Daemons
+# macOS specific
 # ==============================
 brew "koekeishiya/formulae/yabai"      # windows manager       𐃘 https://github.com/asmvik/yabai
 brew "koekeishiya/formulae/skhd"       # hotkey daemon         𐃘 https://github.com/asmvik/skhd
 brew "FelixKratz/formulae/sketchybar"  # customizable menu bar 𐃘 https://github.com/FelixKratz/SketchyBar
 brew "FelixKratz/formulae/borders"     # extra borders         𐃘 https://github.com/FelixKratz/JankyBorders
 brew "mole"                            # tui uninstaller       𐃘 https://github.com/tw93/Mole
-brew "switchaudio-osx"                 # spund-source manager  𐃘 https://github.com/deweller/switchaudio-osx
 
 # ==============================
 # Programming
@@ -85,8 +86,6 @@ cask "font-sf-mono"
         # Ubuntu
 cask "font-ubuntu"
 cask "font-ubuntu-mono"
-cask "font-ubuntu-sans"
-cask "font-ubuntu-sans-mono"
         # Courier
 cask "font-courier-new"
 cask "font-courier-prime"

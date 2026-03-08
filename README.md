@@ -17,9 +17,9 @@ This repo exists to save the configuration and image of my working machine — s
 ├── .environment/
 │   ├── instructions.txt   # all the necessary instructions
 │   ├── firefox-setup.txt  # user.js and extensions list
-│   ├── defaults/...       # files to put as system-wide and user ones
-│   ├── brew/...           # 
-│   └── nix/...
+│   ├── defaults/...       # system-wide & user files/binaries/wallpapers
+│   ├── brew/...           # brew-based environment — brewfile
+│   └── nix/...            # nix-based environment — flake
 │
 └── .config/...            # directories with configurations
 ```
@@ -49,8 +49,8 @@ This repo exists to save the configuration and image of my working machine — s
 ## 🐟 Customization from Fish
 
 ###### Path hierarchy
-1. `/opt/homebrew/bin` — system-wide homebrew packages
-2. Everything else
+1. `/opt/homebrew/bin`               — system-wide homebrew packages
+2. `$HOME/.environment/defaults/bin` — custom binaries I compiled and stored myself
 
 ###### Short brew commands
 

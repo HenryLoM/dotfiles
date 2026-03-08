@@ -3,7 +3,7 @@
     "logo": {
         "source": "~/.config/fastfetch/ascii.txt",
         "color": {
-            "1": "magenta"
+            "1": "blue"
         },
         "padding": { "top": 0 }
     },
@@ -17,39 +17,38 @@
     },
     "modules": [
         { "type": "break" },
-        { "type": "break" },
         {
             "type": "os",
             "key": "┃ os       ┣",
-            "keyColor": "magenta",
-            "outputColor": "blue",
+            "keyColor": "blue",
+            "outputColor": "white",
             "format": "{name} {codename}"
         },
         {
             "type": "shell",
             "key": "┃ shell    ┣",
-            "keyColor": "magenta",
-            "outputColor": "blue",
+            "keyColor": "blue",
+            "outputColor": "white",
             "format": "{pretty-name}"
         },
         {
             "type": "terminal",
             "key": "┃ terminal ┣",
-            "keyColor": "magenta",
-            "outputColor": "blue",
+            "keyColor": "blue",
+            "outputColor": "white",
             "format": "{pretty-name}"
         },
         {
             "type": "packages",
             "key": "┃ packages ┣",
-            "keyColor": "magenta",
-            "outputColor": "blue",
+            "keyColor": "blue",
+            "outputColor": "white",
             "combined": true
         },
         {
             "type": "colors",
             "key": "┃ colors   ┣",
-            "keyColor": "magenta",
+            "keyColor": "blue",
             "symbol": "diamond"
         }
     ]

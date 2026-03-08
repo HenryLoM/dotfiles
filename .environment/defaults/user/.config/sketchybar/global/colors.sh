@@ -38,10 +38,10 @@ done
 # ==============================
 # Titled
 # ==============================
-colors_bar=$(hex2ahex cc "$KITTY_background")
+colors_bar=$(hex2ahex ff "$KITTY_background")
 colors_widget=0x00000000
 colors_border=0x00000000
-colors_icon=$(hex2ahex ff "$KITTY_color5")
-colors_label=$(hex2ahex ff "$KITTY_color4")
+colors_icon=$(hex2ahex ff "$KITTY_color4")
+colors_label=$(hex2ahex ff "$KITTY_color7")
 colors_widget_popup=$colors_background
 colors_border_popup=$colors_icon
