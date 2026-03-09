@@ -1,12 +1,15 @@
 #!/bin/bash
 
 options=(
-    style=round
-    width=1.5
-    hidpi=off
-    active_color=0xffcba7f7
-    inactive_color=0x99cba7f7
-    whitelist="kitty"
+    style=square
+    width=0
+    hidpi=on
+    ax_focus=off
+    order=above
+    active_color=0xff000000
+    inactive_color=0xff000000
+    background_color=0x00000000
+    whitelist="kitty,Code,zen"
 )
 
 borders "${options[@]}"

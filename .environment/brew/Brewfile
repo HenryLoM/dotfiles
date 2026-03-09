@@ -8,11 +8,12 @@ tap "FelixKratz/formulae"
 # ==============================
 # GUI
 # ==============================
-cask "docker-desktop"                                   # docker gui        𐃘 https://github.com/docker/for-mac
+cask "zen"                                              # modern browser    𐃘 https://github.com/zen-browser/desktop
 cask "visual-studio-code"                               # code editor       𐃘 https://github.com/microsoft/vscode
 cask "simplex"                                          # e2e messanger     𐃘 https://github.com/simplex-chat/simplex-chat
 cask "session"                                          # onion messanger   𐃘 https://github.com/session-foundation/session-desktop
 cask "iina"                                             # video player      𐃘 https://github.com/iina/iina
+cask "docker-desktop"                                   # docker gui        𐃘 https://github.com/docker/for-mac
 cask "TheBoredTeam/homebrew-boring-notch/boring-notch"  # notch enhancer    𐃘 https://github.com/TheBoredTeam/boring.notch
 cask "hiddenbar"                                        # menu bar hider    𐃘 https://github.com/dwarvesf/hidden
 cask "maccy"                                            # clipboard manager 𐃘 https://github.com/p0deje/Maccy
