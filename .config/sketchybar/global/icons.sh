@@ -38,3 +38,4 @@ icons_trash_none=􀜧
 # ==============================
 icons_apple_logo=􀣺
 icons_clock=􀐫
+icons_clipboard=􀉢

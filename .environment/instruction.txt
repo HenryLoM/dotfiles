@@ -13,7 +13,7 @@ eval "$(/opt/homebrew/bin/brew shellenv)"』
 『brew cleanup』
 
 𖣠 Brewfile management
-⁃ Install 𐃘 『brew bundle install』
+⁃ Update 𐃘 『brew bundle install』
 ⁃ Cleanup 𐃘 『brew bundle cleanup --global --force』
 
 ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
@@ -47,12 +47,12 @@ eval "$(/opt/homebrew/bin/brew shellenv)"』
 ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
 
 𖣠 Environment itself
-.environment/ 𐃘 ~/.environment/
+⁃ .environment/ 𐃘 ~/.environment/
 
 𖣠 User
-.hushlogin 𐃘 ~/.hushlogin
-.vimrc     𐃘 ~/.vimrc
-.config/   𐃘 ~/.config/
+⁃ .hushlogin 𐃘 ~/.hushlogin
+⁃ .vimrc     𐃘 ~/.vimrc
+⁃ .config/   𐃘 ~/.config/
 
 𖣠 System-wide
 ⁃ bashrc 𐃘 /etc/bashrc
@@ -76,8 +76,5 @@ eval "$(/opt/homebrew/bin/brew shellenv)"』
 ⁃ starship 𐃘 https://github.com/starship/starship     𐃘 prompt
 
 𖣠 TUI programs
-⁃ boomtypr   𐃘 https://github.com/yagnikpt/boomtypr   𐃘 typing test
-⁃ termrex    𐃘 https://github.com/SATYADAHAL/termrex  𐃘 chrome t-rex game
-⁃ tetro-tui  𐃘 https://github.com/Strophox/tetro-tui  𐃘 tetris
-⁃ dawn       𐃘 https://github.com/andrewmd5/dawn      𐃘 writing environment
-⁃ bookokrat  𐃘 https://github.com/bugzmanov/bookokrat 𐃘 book reader
+⁃ boomtypr   𐃘 https://github.com/yagnikpt/boomtypr 𐃘 typing test
+⁃ gpk        𐃘 https://github.com/neur0map/glazepkg 𐃘 package viewer

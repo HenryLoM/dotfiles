@@ -2,13 +2,12 @@
 
 options=(
     style=square
-    width=0
+    width=1.0
     hidpi=on
     ax_focus=off
-    order=above
+    order=below
     active_color=0xff000000
     inactive_color=0xff000000
-    background_color=0x00000000
     whitelist="kitty,Code,zen"
 )
 

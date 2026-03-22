@@ -49,18 +49,19 @@ This repo exists to save the configuration and image of my working machine — s
 ## 🐟 Customization from Fish
 
 ###### Path hierarchy
-1. `/opt/homebrew/bin`               — system-wide homebrew packages
-2. `$HOME/.environment/defaults/bin` — custom binaries I compiled and stored myself
+1. `$HOME/.environment/defaults/bin` — custom binaries I compiled and stored myself
+2. `/opt/homebrew/bin`               — system-wide homebrew packages
 
 ###### Short brew commands
 
 | Command | Purpose | Raw version |
 |---------|---------|-------------|
-| `bb-update`  | Updates binaries according to the Brewfile      | `brew bundle --file=~/.environment/brew/Brewfile` |
-| `bb-cleanup` | Removes binaries that are not from the Brewfile | `brew bundle --file=~/.environment/brew/Brewfile --force cleanup` |
-| `nudge`      | Starts a daemon                                 | `brew services start` |
-| `kick`       | Restarts a daemon                               | `brew services restart` |
-| `slap`       | Stops a daemon                                  | `brew services stop` |
+| `bb-install` | Installs binaries according to the Brewfile                 | `brew bundle --file=~/.environment/brew/Brewfile` |
+| `bb-prune`   | Prunes binaries that are not from the Brewfile              | `brew bundle --file=~/.environment/brew/Brewfile --force cleanup` |
+| `bb-sync`    | Both prunes and installs binaries according to the Brewfile | `bb-prune && bb-install` |
+| `nudge`      | Starts a daemon                                             | `brew services start` |
+| `kick`       | Restarts a daemon                                           | `brew services restart` |
+| `slap`       | Stops a daemon                                              | `brew services stop` |
 
 ## 📸 Result
 ![result](result.png)

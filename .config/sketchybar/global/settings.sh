@@ -3,7 +3,7 @@
 # ==============================
 # Sizes
 # ==============================
-settings_bar_height=32
+settings_bar_height=33
 settings_widget_height=26
 settings_border_width=2
 settings_icon_size=14.0
