@@ -12,12 +12,10 @@ if status is-interactive
     fish_add_path -g --append "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/"  # "code" command
     fish_add_path -g --append $HOME/.spicetify                                                    # spicetify
     
-    # Disable fish greeting
-    set -g fish_greeting
-
-    # Disable auto-updates and env hints for homebrew
-    set -gx HOMEBREW_NO_AUTO_UPDATE 1
-    set -gx HOMEBREW_NO_ENV_HINTS   1
+    # Disables
+    set -g  fish_greeting              # fish greeting
+    set -gx HOMEBREW_NO_AUTO_UPDATE 1  # homebrew auto-updating
+    set -gx HOMEBREW_NO_ENV_HINTS   1  # homebrew hints
 
     # Inits
     starship init fish | source
@@ -52,7 +50,7 @@ if status is-interactive
     alias cc "cc -std=c11 -Wall -Wextra -Wpedantic -Wconversion -Wshadow"
 
     # Debian VM
-    alias debian-cli 'docker run --rm -it debian:latest bash'
+    alias debian-cli "docker run --rm -it debian:latest bash"
 
     # ==============================
     # Functions
@@ -105,7 +103,7 @@ if status is-interactive
         mkdir -p "$DST"
             # Sync dotfiles
         cp -f "$SRC/starship.toml" "$DST/starship.toml"
-        for dir in yabai skhd sketchybar borders fish kitty fastfetch
+        for dir in yabai skhd sketchybar borders fish kitty mpv fastfetch
             rm -rf "$DST/$dir"
             cp -R  "$SRC/$dir" "$DST/$dir"
         end

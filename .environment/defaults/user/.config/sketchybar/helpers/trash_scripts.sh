@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
 # ==============================
 # Source globals
@@ -18,6 +18,6 @@ click() {
 }
 
 # ==============================
-# Bare call without a handler
+# Bare call without any handler
 # ==============================
 click

@@ -23,13 +23,13 @@ cask "font-symbols-only-nerd-font"
 # GUI
 # ==============================
         # Apps
-cask "zen"                 # modern browser    𐃘 https://github.com/zen-browser/desktop
+cask "kitty"               # terminal emulator 𐃘 https://github.com/kovidgoyal/kitty
+cask "zen"                 # browser           𐃘 https://github.com/zen-browser/desktop
 cask "visual-studio-code"  # code editor       𐃘 https://github.com/microsoft/vscode
 cask "ente-auth"           # 2FA authenticator 𐃘 https://github.com/ente-io/ente
 cask "simplex"             # e2e messanger     𐃘 https://github.com/simplex-chat/simplex-chat
 cask "session"             # onion messanger   𐃘 https://github.com/session-foundation/session-desktop
         # Utilities
-cask "iina"                                             # video player      𐃘 https://github.com/iina/iina
 cask "docker-desktop"                                   # docker gui        𐃘 https://github.com/docker/for-mac
 cask "TheBoredTeam/homebrew-boring-notch/boring-notch"  # notch enhancer    𐃘 https://github.com/TheBoredTeam/boring.notch
 cask "hiddenbar"                                        # menu bar hider    𐃘 https://github.com/dwarvesf/hidden
@@ -40,7 +40,7 @@ cask "maccy"                                            # clipboard manager 𐃘
 # ==============================
         # Shell & Terminal
 brew "fish"      # shell    𐃘 https://github.com/fish-shell/fish-shell
-cask "kitty"     # terminal 𐃘 https://github.com/kovidgoyal/kitty
+brew "bash"      # og shell 𐃘 https://cgit.git.savannah.gnu.org/cgit/bash.git
 brew "starship"  # prompt   𐃘 https://github.com/starship/starship
         # TUI programs
 brew "vim"   # code editor               𐃘 https://github.com/vim/vim
@@ -48,7 +48,8 @@ brew "yazi"  # file manager              𐃘 https://github.com/sxyazi/yazi
 brew "kew"   # music player              𐃘 https://github.com/ravachol/kew
 brew "gtop"  # monitoring process viewer 𐃘 https://github.com/aksakalli/gtop
         # ClI tools
-brew "git"       # version contol             𐃘 https://github.com/git/git
+brew "git"       # version contol             𐃘 https://git.kernel.org/pub/scm/git/git.git
+brew "mpv"       # video player               𐃘 https://github.com/mpv-player/mpv
 brew "unar"      # universal unarchiving tool 𐃘 https://github.com/ashang/unar
 brew "exiftool"  # meta-data reader + cleaner 𐃘 https://github.com/exiftool/exiftool
 brew "ffmpeg"    # media converter            𐃘 https://github.com/FFmpeg/FFmpeg
@@ -87,3 +88,4 @@ brew "go"    # go compiler and toolchain
 brew "rust"  # rustc + cargo
 brew "php"   # php server
 brew "node"  # node runtime + npm
+brew "lua"   # lua interpreter

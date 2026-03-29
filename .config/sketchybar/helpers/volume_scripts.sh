@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
 # ==============================
 # Source globals
@@ -30,7 +30,7 @@ update() {
 }
 
 # ==============================
-# Handler
+# Update Handler
 # ==============================
 case "$SENDER" in
     "volume_change") update ;;
