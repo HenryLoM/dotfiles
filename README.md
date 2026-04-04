@@ -16,10 +16,10 @@ This repo exists to save the configuration and image of my working machine — s
 │
 ├── .environment/
 │   ├── instructions.txt   # all the necessary instructions
-│   ├── firefox-setup.txt  # user.js and extensions list
-│   ├── defaults/...       # system-wide & user files/binaries/wallpapers
-│   ├── brew/...           # brew-based environment — brewfile
-│   └── nix/...            # nix-based environment — flake
+│   ├── packages/...       # brew bundle management
+│   ├── bin/...            # custom binaries
+│   ├── wallpapers/...     # favorite wallpapers
+│   └── misc/...           # different types of important files
 │
 └── .config/...            # directories with configurations
 ```
@@ -37,7 +37,7 @@ This repo exists to save the configuration and image of my working machine — s
     eval "$(/opt/homebrew/bin/brew shellenv)"
 
     # Move to the necessary directory
-    cd ~/.environment/brew/
+    cd ~/.environment/packages/
 
     # Apply bundle (Brewfile) configuration & Remove odd binaries
     brew bundle install
@@ -49,15 +49,15 @@ This repo exists to save the configuration and image of my working machine — s
 ## 🐟 Customization from Fish
 
 ###### Path hierarchy
-1. `$HOME/.environment/defaults/bin` — custom binaries I compiled and stored myself
-2. `/opt/homebrew/bin`               — system-wide homebrew packages
+1. `$HOME/.environment/bin` — custom binaries I compiled and stored myself
+2. `/opt/homebrew/bin`      — system-wide homebrew packages
 
 ###### Short brew commands
 
 | Command | Purpose | Raw version |
 |---------|---------|-------------|
-| `bb-install` | Installs binaries according to the Brewfile                 | `brew bundle --file=~/.environment/brew/Brewfile` |
-| `bb-prune`   | Prunes binaries that are not from the Brewfile              | `brew bundle --file=~/.environment/brew/Brewfile --force cleanup` |
+| `bb-install` | Installs binaries according to the Brewfile                 | `brew bundle --file=~/.environment/packages/Brewfile` |
+| `bb-prune`   | Prunes binaries that are not from the Brewfile              | `brew bundle --file=~/.environment/packages/Brewfile --force cleanup` |
 | `bb-sync`    | Both prunes and installs binaries according to the Brewfile | `bb-prune && bb-install` |
 | `nudge`      | Starts a daemon                                             | `brew services start` |
 | `kick`       | Restarts a daemon                                           | `brew services restart` |

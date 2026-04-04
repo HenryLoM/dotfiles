@@ -1,0 +1,41 @@
+# ==============================
+# Git
+# ==============================
+
+Host codeberg.org
+    HostName codeberg.org
+    User git
+    IdentityFile ~/.ssh/id_ed25519_codeberg
+    IdentitiesOnly yes
+
+Host github.com
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519_github
+    IdentitiesOnly yes
+
+# ==============================
+# Chats
+# ==============================
+
+Host tavrn.sh
+    HostName tavrn.sh
+    IdentityFile ~/.ssh/id_ed25519_tavrn
+    IdentitiesOnly yes
+
+Host late.sh
+    HostName late.sh
+    IdentityFile ~/.ssh/id_ed25519_late
+    IdentitiesOnly yes
+
+Host jellyshell.dev
+    HostName jellyshell.dev
+    IdentityFile ~/.ssh/id_ed25519_jellyshell
+    IdentitiesOnly yes
+
+# ==============================
+# Global defaults
+# ==============================
+Host *
+    User hank
+    IdentityFile ~/.ssh/id_rsa

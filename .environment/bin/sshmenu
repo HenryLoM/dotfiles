@@ -1,0 +1,28 @@
+#!/usr/bin/env sh
+
+# Blacklist patterns (substring match)
+blacklist=("github" "codeberg" "*")
+
+# Extract Host entries from ~/.ssh/config
+servers=$(grep -E '^Host ' ~/.ssh/config | awk '{print $2}')
+
+# Filter out blacklisted entries
+for b in "${blacklist[@]}"; do
+    servers=$(echo "$servers" | grep -v "$b")
+done
+
+# Exit if no hosts left
+if [ -z "$servers" ]; then
+    echo "No hosts available after filtering blacklist"
+    exit 1
+fi
+
+# Interactive selection with fzf (arrows only)
+selected=$(echo "$servers" | fzf --ansi --height 10 --reverse --border \
+    --prompt="Select SSH server: ")
+
+# Run ssh if selection made
+if [ -n "$selected" ]; then
+    clear
+    ssh "$selected"
+fi

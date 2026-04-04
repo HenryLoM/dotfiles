@@ -5,10 +5,10 @@ options=(
     width=1.0
     hidpi=on
     ax_focus=off
-    order=below
+    order=above
     active_color=0xff000000
     inactive_color=0xff000000
-    whitelist="kitty,Code,zen"
+    whitelist="kitty,Code"
 )
 
 borders "${options[@]}"

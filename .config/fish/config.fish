@@ -6,8 +6,8 @@ if status is-interactive
 
     # Path hierarchy
         # Main
-    fish_add_path -g /opt/homebrew/bin                # homebrew
-    fish_add_path -g $HOME/.environment/defaults/bin  # custom binaries
+    fish_add_path -g /opt/homebrew/bin       # homebrew
+    fish_add_path -g $HOME/.environment/bin  # custom binaries
         # External
     fish_add_path -g --append "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/"  # "code" command
     fish_add_path -g --append $HOME/.spicetify                                                    # spicetify
@@ -26,8 +26,8 @@ if status is-interactive
     # ==============================
 
     # Quick Brewfile management
-    alias bb-install "brew bundle --file=~/.environment/brew/Brewfile"
-    alias bb-prune   "brew bundle --file=~/.environment/brew/Brewfile --force cleanup"
+    alias bb-install "brew bundle --file=~/.environment/packages/Brewfile"
+    alias bb-prune   "brew bundle --file=~/.environment/packages/Brewfile --force cleanup"
     alias bb-sync    "bb-prune && bb-install"
 
     # Quick daemon runners
@@ -46,7 +46,7 @@ if status is-interactive
 
     # Updated default commands
     alias cd "z"
-    alias ls "eza -lh --icons"
+    alias ls "eza -lh --icons --time-style=+'%Y-%m-%d %H:%M'"
     alias cc "cc -std=c11 -Wall -Wextra -Wpedantic -Wconversion -Wshadow"
 
     # Debian VM
@@ -67,12 +67,9 @@ if status is-interactive
 
     # Metadata cleaner
     function clean-metadata
-            # Generic metadata
-        exiftool -all= -overwrite_original    $argv
-        exiftool -all= -overwrite_original -r $argv
-            # macOS info
-        xattr -c  $argv
-        xattr -rc $argv
+        exiftool -all= -overwrite_original_in_place -r $argv           # Generic metadata
+        xattr -rc $argv                                                # macOS info
+        find $argv -exec SetFile -d (date '+%m/%d/%Y %H:%M:%S') {} \;  # Birth timestamp
     end
 
     # Audio cleaner
@@ -94,11 +91,21 @@ if status is-interactive
         end
     end
 
+    # SSH key creator
+    function create-ssh
+        if test (count $argv) -gt 0
+            set keyfile "$HOME/.ssh/id_ed25519_$argv[1]"
+        else
+            set keyfile "$HOME/.ssh/id_ed25519"
+        end
+        ssh-keygen -t ed25519 -f $keyfile
+    end
+
     # Sync my dotfiles with .mylife
     function sync-environment
             # Define paths
         set SRC  "$HOME/.config"
-        set DST  "$HOME/.environment/defaults/user/.config"
+        set DST  "$HOME/.environment/misc/.config"
             # Ensure destination exists
         mkdir -p "$DST"
             # Sync dotfiles
