@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 # ==============================
-# Find Kitty's colors config
+# Config path
 # ==============================
 kitty_conf="$HOME/.config/kitty/colors.conf"
 [ ! -f "$kitty_conf" ] && kitty_conf="$HOME/.config/kitty/colors.conf"
@@ -13,7 +13,7 @@ kitty_conf="$HOME/.config/kitty/colors.conf"
 hex2ahex() { printf "0x%s%s\n" "$1" "${2#"#"}"; }
 
 # ==============================
-# Read colors into variables
+# Read config
 # ==============================
 while read -r key val; do
     [ -z "$key" ] && continue
@@ -22,14 +22,14 @@ while read -r key val; do
 done < "$kitty_conf"
 
 # ==============================
-# General
+# General colors
 # ==============================
-colors_background=$(hex2ahex cc "$KITTY_background")
+colors_background=$(hex2ahex ff "$KITTY_background")
 colors_foreground=$(hex2ahex ff "$KITTY_foreground")
 colors_transparent=0x00000000
 
 # ==============================
-# Main ANSI 0–7
+# ANSI colors
 # ==============================
 for i in $(seq 0 7); do
     eval "colors_color$i=\$(hex2ahex ff \"\$KITTY_color$i\")"
@@ -38,10 +38,12 @@ done
 # ==============================
 # Titled
 # ==============================
-colors_bar=$(hex2ahex ff "$KITTY_background")
+colors_bar=$colors_background
 colors_widget=0x00000000
 colors_border=0x00000000
-colors_icon=$(hex2ahex ff "$KITTY_color4")
-colors_label=$(hex2ahex ff "$KITTY_color7")
+
+colors_icon=$colors_foreground
+colors_label=$colors_foreground
+
 colors_widget_popup=$colors_background
 colors_border_popup=$colors_icon

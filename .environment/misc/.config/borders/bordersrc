@@ -1,14 +1,14 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 options=(
-    style=square
-    width=1.0
+    style=round
+    width=2.0
     hidpi=on
     ax_focus=off
-    order=above
-    active_color=0xff000000
-    inactive_color=0xff000000
-    whitelist="kitty,Code"
+    order=below
+    active_color=0xffd0d0d0
+    inactive_color=0xffa0a0a0
+    whitelist="kitty"
 )
 
 borders "${options[@]}"

@@ -1,0 +1,304 @@
+#!/usr/bin/env bash
+
+# ========== ========== ==========
+# Variables
+# ========== ========== ==========
+
+ROOT="$HOME/.mymusic"
+CACHE="$HOME/.cache/muz"
+
+state="artists"
+cursor=0
+scroll=0
+lyrics_enabled=0
+chain_enabled=0
+
+artists=()
+albums=()
+tracks=()
+
+current_artist=""
+current_album=""
+
+# ========== ========== ==========
+# Helpers
+# ========== ========== ==========
+
+get_year() {
+    ffprobe -v error -show_entries format_tags=date \
+        -of default=noprint_wrappers=1:nokey=1 "$1" 2>/dev/null | cut -c1-4
+}
+
+get_tracknum() {
+    ffprobe -v error -show_entries format_tags=track \
+        -of default=noprint_wrappers=1:nokey=1 "$1" 2>/dev/null | cut -d'/' -f1
+}
+
+fetch_lyrics() {
+    if ! check_dependencies curl jq; then
+        echo "Missing dependencies: curl & jq. Lyrics cannot be fetched."
+        return 1
+    fi
+
+    local artist title file
+
+    artist="$(basename "$current_artist")"
+    file="${tracks[$cursor]#*|}"
+    title="$(basename "$file" .mp3)"
+
+    mkdir -p "$CACHE"
+    cache_lyrics_file="$CACHE/${artist}-${title}.lrc"
+
+    [[ -s "$cache_lyrics_file" ]] && { cat "$cache_lyrics_file"; return; }
+
+    curl -s "https://lrclib.net/api/get?artist_name=$(printf '%s' "$artist" \
+        | jq -sRr @uri)&track_name=$(printf '%s' "$title" | jq -sRr @uri)" \
+        | jq -r '.plainLyrics // .syncedLyrics // empty' \
+        | sed 's/\[[0-9:.]*\]//g' \
+        | tee "$cache_lyrics_file"
+    
+    [[ -s "$cache_lyrics_file" ]] || {
+        rm -f "$cache_lyrics_file"; echo "No lyrics fetched."
+    }
+}
+
+play_audio() {
+    file="${files[$cursor]}"
+
+    # Deal with the temporary cover
+    mkdir -p "$CACHE"
+    chache_cover_file="$CACHE/mpv_cover.jpg"
+    ffmpeg -y -i "$file" -an -vcodec copy "$chache_cover_file" 2>/dev/null
+
+    # Put the cover on the screen
+    term_width=$(tput cols)
+    term_height=$(tput lines)
+    c=$((term_height * 5 / 3)); (( term_width < c )) && c=$term_width
+    w=$((term_width - c - 1))
+    kitten icat --stdin no --place ${c}x${c}@${w}x1 "$chache_cover_file"
+
+    # Delete the temporary cover
+    rm -f "$chache_cover_file"
+
+    # Play the audio
+    if ((chain_enabled)); then
+        mpv --playlist-start="$cursor" \
+            --config-dir="$HOME/.config/mpv/music-player" \
+            --msg-level=ffmpeg=no,ao=no,vo=no,cplayer=no \
+            --no-video \
+            "${files[@]}"
+    else
+        mpv --config-dir="$HOME/.config/mpv/music-player" \
+            --msg-level=ffmpeg=no,ao=no,vo=no,cplayer=no,osd/libass=no \
+            --no-video \
+            --term-status-msg=' ${time-pos:${=mm\\:ss}} | ${duration:${=mm\\:ss}}' \
+            "${files[$cursor]}"
+    fi
+}
+
+check_dependencies() {
+    local missing=()
+
+    for cmd in "$@"; do
+        command -v "$cmd" >/dev/null 2>&1 || missing+=("$cmd")
+    done
+
+    if (( ${#missing[@]} > 0 )); then
+        echo "Missing: ${missing[*]}" >&2
+        return 1
+    fi
+}
+
+# ========== ========== ==========
+# Loaders
+# ========== ========== ==========
+
+load_artists() {
+    mapfile -t artists < <(
+        find "$ROOT" -mindepth 1 -maxdepth 1 -type d \
+        | LC_ALL=C.UTF-8 sort -f
+    )
+}
+
+load_albums() {
+    mapfile -t albums < <(
+        for d in "$current_artist"/*; do
+            [ -d "$d" ] || continue
+
+            first=""
+            for f in "$d"/*.mp3; do
+                [ -f "$f" ] && { first="$f"; break; }
+            done
+
+            year=$(get_year "$first")
+            printf "%04d|%s\n" "${year:-0000}" "$d"
+        done | sort -r | cut -d'|' -f2
+    )
+}
+
+load_tracks() {
+    mapfile -t tracks < <(
+        for f in "$current_album"/*.mp3; do
+            [ -f "$f" ] || continue
+            tn=$(get_tracknum "$f")
+            printf "%03d|%s\n" "${tn:-999}" "$f"
+        done | sort
+    )
+}
+
+# ========== ========== ==========
+# UI
+# ========== ========== ==========
+
+draw() {
+    # Display status bar on top
+    clear
+    suffix=$(
+        [ "$lyrics_enabled" -eq 1 ] && echo -n " [+ lyrics]"
+        [ "$chain_enabled"  -eq 1 ] && echo -n " [+ chain]"
+    )
+
+    case "$state" in
+        artists) title="Artists";
+                 list=("${artists[@]}") ;;
+        albums)  title="Albums: $(basename "$current_artist")";
+                 list=("${albums[@]}") ;;
+        tracks)  title="Tracks: $(basename "$current_album")";
+                 list=("${tracks[@]}") ;;
+    esac
+
+    printf "%s%*s\n" "$title" $(( $(tput cols) - ${#title} )) "$suffix"
+    echo
+
+    # Terminal height
+    term_h=$(tput lines)
+    visible=$((term_h - 3))  # leaving space for the header
+
+    # Adjust scroll when cursor moves
+    if (( cursor <= scroll )); then
+        scroll=$((cursor - visible + 1))
+    elif (( cursor >= scroll + visible - 1 )); then
+        scroll=$cursor
+    fi
+
+    # Clamp scroll
+    ((scroll < 0)) && scroll=0
+    max_scroll=$(( ${#list[@]} - visible ))
+    ((scroll > max_scroll)) && scroll=$max_scroll
+    ((scroll < 0)) && scroll=0
+
+    # Render visible window
+    for ((i = scroll; i < scroll + visible && i < ${#list[@]}; i++)); do
+        prefix="  "
+        [ "$i" -eq "$cursor" ] && prefix="> "
+
+        if [ "$state" = "tracks" ]; then
+            entry="${list[$i]}"
+            tn="${entry%%|*}"
+            path="${entry#*|}"
+            name="$(basename "$path" .mp3)"
+
+            printf "%s%d\t%s\n" "$prefix" "$((10#$tn))" "$name"
+        else
+            printf "%s%s\n" "$prefix" "$(basename "${list[$i]}")"
+        fi
+    done
+}
+
+# ========== ========== ==========
+# Input
+# ========== ========== ==========
+
+read_key() {
+    IFS= read -rsn1 key
+
+    if [[ $key == $'\x1b' ]]; then
+        read -rsn2 -t 0.01 rest
+        key+=$rest
+    fi
+
+    case "$key" in
+        $'\x1b[A'|"k")         echo "up"    ;;
+        $'\x1b[B'|"j")         echo "down"  ;;
+        $'\x1b[C'|"l"|"")      echo "enter" ;;
+        $'\x1b[D'|"h"|$'\x1b') echo "back"  ;;
+        "t") echo "toggle_lyrics" ;;
+        "c") echo "toggle_chain"  ;;
+        "q") echo "quit"          ;;
+        *)   echo ""              ;;
+    esac
+}
+
+# ========== ========== ==========
+# Main
+# ========== ========== ==========
+
+if ! check_dependencies mpv ffprobe; then
+    echo "Missing dependencies: mpv & ffprobe. They are necessary to use muz"
+    exit 1
+fi
+
+load_artists
+
+while true; do
+    draw
+    key=$(read_key)
+
+    case "$key" in
+        up)
+            ((cursor--)); ((cursor<0)) && cursor=0 && scroll=0
+            ;;
+        down)
+            ((cursor++))
+            case "$state" in
+                artists) max=$((${#artists[@]}-1)) ;;
+                albums)  max=$((${#albums[@]}-1))  ;;
+                tracks)  max=$((${#tracks[@]}-1))  ;;
+            esac
+            ((cursor>max)) && cursor=$max
+            ;;
+        enter)
+            case "$state" in
+                artists)
+                    current_artist="${artists[$cursor]}"; cursor=0; scroll=0
+                    load_albums
+                    state="albums"
+                    ;;
+                albums)
+                    current_album="${albums[$cursor]}"; cursor=0; scroll=0
+                    load_tracks
+                    state="tracks"
+                    ;;
+                tracks)
+                    files=()
+                    for entry in "${tracks[@]}"; do
+                        files+=("${entry#*|}")
+                    done
+
+                    reset
+
+                    play_audio files
+
+                    ;;
+                esac
+            ;;
+        back)
+            case "$state" in
+                albums) state="artists" ;;
+                tracks) state="albums" ;;
+                *) clear; exit ;;
+            esac
+            cursor=0; scroll=0
+            ;;
+        toggle_lyrics)
+            ((lyrics_enabled = !lyrics_enabled))
+            ;;
+        toggle_chain)
+            ((chain_enabled = !chain_enabled))
+            ;;
+        quit)
+            clear
+            exit 0
+            ;;
+    esac
+done

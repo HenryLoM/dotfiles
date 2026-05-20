@@ -6,8 +6,8 @@
 alt - return : open -a  "Finder"
 alt - k      : open -na "kitty"
 alt - v      : open -a  "Visual Studio Code"
-alt - s      : open -a  "Spotify"
 alt - z      : open -a  "Zen"
+alt - m      : open -a  "Meta"
 
 # ==============================
 # Yabai

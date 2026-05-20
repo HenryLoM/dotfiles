@@ -1,0 +1,147 @@
+#!/bin/sh
+set -eu
+
+# Default language is English
+LANGUAGE="en"
+BLUE="$(printf '\033[34m')"
+RESET="$(printf '\033[0m')"
+
+# forces the use of sh so preview doesn't break on non POSIX compliant shells
+SHELL=/bin/sh
+
+usage() {
+    cat <<EOF
+Usage: $(basename "$0") [OPTIONS] <query>
+
+Search and view Wikipedia articles from the terminal.
+
+Options:
+  -h, --help        Show this help message
+  -l, --language    Sets the Wikipedia article language (ccTLD notationTLD)
+  -s, --save        Saves the Wiki article to a file
+  -v, --view        Pager to be used for viewing the Wikipedia article (e.g. 'less')
+
+Examples:
+  $(basename "$0") linux
+  $(basename "$0") ssh -l de
+  $(basename "$0") "quantum mechanics"
+EOF
+}
+
+QUERY=""
+SAVE_TO_FILE=0
+FILE_LOCATION=""
+PAGER="less"
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -h|--help) usage; exit 0 ;;
+	-s|--save) SAVE_TO_FILE=1; shift ;;
+        -l|--language) LANGUAGE="$2"; shift 2 ;;
+        -v|--viewer) PAGER="$2"; shift 2 ;;
+	*) QUERY="$QUERY $1"; shift ;;
+    esac
+done
+
+API="https://$LANGUAGE.wikipedia.org/w/api.php"
+# Trim leading space
+QUERY=$(printf "%s" "$QUERY" | sed 's/^ *//')
+
+# Show help if no query provided
+if [ -z "$QUERY" ]; then
+    usage
+    exit 1
+fi
+
+for cmd in curl jq fzf; do
+    command -v "$cmd" >/dev/null 2>&1 || {
+        echo "Error: '$cmd' is required but not installed." >&2
+        exit 1
+    }
+done
+
+# Renders the text in a pager
+render() {
+    TEXT="# $1
+
+$2"
+    printf "%s\n" "$TEXT" | "$PAGER"
+}
+
+# Redirects the response the the API to a file on disk
+printer() {
+    mkdir -p .articles
+    FILE_LOCATION=".articles/$(printf '%s' "$1" | tr ' /' '_').md"
+    TEXT="# $1
+$2"
+    printf "%s\n" "$TEXT" > "$FILE_LOCATION"
+    printf "Saved to %s\n" "$FILE_LOCATION" >&2
+}
+# Checks if the text should be rendered in a pager or to populate a given file.
+# Doesn't set the $TEXT variable, as that is the responsibility of the handle
+stream_handle() {
+    if [ "$SAVE_TO_FILE" = 0 ]; then
+        render "$1" "$2"
+    else
+        printer "$1" "$2"
+    fi
+}
+
+article() {
+    TITLE_RAW="$1"
+    TITLE_ENC=$(printf '%s' "$TITLE_RAW" | jq -sRr @uri)
+
+    RES=$(curl -fsSL --retry 2 --connect-timeout 5 --max-time 10 \
+        "$API?action=query&titles=$TITLE_ENC&prop=extracts|pageprops&explaintext=1&format=json&redirects=1" \
+        || true)
+
+    [ -z "$RES" ] && return 1
+
+    TITLE=$(printf '%s' "$RES" | jq -r '.query.pages | to_entries[0].value.title // empty')
+    BODY=$(printf '%s' "$RES" | jq -r '.query.pages | to_entries[0].value.extract // empty')
+    DISAMBIG=$(printf '%s' "$RES" | jq -r '.query.pages | to_entries[0].value.pageprops.disambiguation? // empty')
+
+    [ -z "$TITLE" ] && return 1
+
+    # DISAMBIGUATION HANDLING
+    if [ -n "$DISAMBIG" ]; then
+        SEL=$(curl -fsSL --retry 2 \
+            "$API?action=query&titles=$TITLE_ENC&prop=links&pllimit=max&format=json" \
+        | jq -r '.query.pages | to_entries[0].value.links[].title' \
+        | grep -v ":" \
+        | fzf \
+            --prompt="${BLUE}Select > ${RESET}" \
+            --preview "
+t=\$(printf '%s' {} | jq -sRr @uri)
+curl -fsSL '$API?action=query&titles='\$t'&prop=extracts&explaintext=1&format=json' 2>/dev/null \
+| jq -r '.query.pages | to_entries[0].value.extract // \"\"' | head -n 20
+")
+
+        [ -z "$SEL" ] && return 0
+        article "$SEL"
+        return
+    fi
+
+    stream_handle "$TITLE" "$BODY"
+}
+
+# SEARCH + SELECT
+SEL=$(curl -fsSL --retry 2 \
+    "$API" \
+    --data-urlencode "action=query" \
+    --data-urlencode "list=search" \
+    --data-urlencode "srsearch=$QUERY" \
+    --data-urlencode "format=json" \
+    --data-urlencode "srlimit=20" \
+| jq -r '.query.search[].title' \
+| fzf \
+    --prompt="${BLUE}Wiki > ${RESET}" \
+    --preview "
+t=\$(printf '%s' {} | jq -sRr @uri)
+curl -fsSL '$API?action=query&titles='\$t'&prop=extracts&explaintext=1&format=json' 2>/dev/null \
+| jq -r '.query.pages | to_entries[0].value.extract // \"\"' | head -n 20
+")
+
+[ -z "$SEL" ] && exit 0
+
+article "$SEL"

@@ -18,24 +18,36 @@ Host github.com
 # Chats
 # ==============================
 
-Host tavrn.sh
+Host tavrn
     HostName tavrn.sh
     IdentityFile ~/.ssh/id_ed25519_tavrn
     IdentitiesOnly yes
 
-Host late.sh
+Host late
     HostName late.sh
     IdentityFile ~/.ssh/id_ed25519_late
     IdentitiesOnly yes
 
-Host jellyshell.dev
+Host jellyshell
     HostName jellyshell.dev
     IdentityFile ~/.ssh/id_ed25519_jellyshell
     IdentitiesOnly yes
 
 # ==============================
+# Misc
+# ==============================
+
+Host sshtron
+    HostName sshtron.zachlatta.com
+
+Host frittura
+    HostName frittura.org
+    Port 2020
+
+# ==============================
 # Global defaults
 # ==============================
+
 Host *
     User hank
     IdentityFile ~/.ssh/id_rsa

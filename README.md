@@ -1,6 +1,6 @@
 # 🛠️ Dotfiles & Rice
 
-This repo exists to save the configuration and image of my working machine — so I can rebuild it later if needed. Feel free to use anything you need.
+This repo exists to save the configuration and image of my working machine - so I can rebuild it later if needed. Feel free to use anything you need.
 
 > 🍺 I moved from Nix package manager back to Brew (and its Brewfile) because of the complexity Nix was bringing to the system.
 
@@ -49,8 +49,8 @@ This repo exists to save the configuration and image of my working machine — s
 ## 🐟 Customization from Fish
 
 ###### Path hierarchy
-1. `$HOME/.environment/bin` — custom binaries I compiled and stored myself
-2. `/opt/homebrew/bin`      — system-wide homebrew packages
+1. `$HOME/.environment/bin` - custom binaries I compiled and stored myself
+2. `/opt/homebrew/bin`      - system-wide homebrew packages
 
 ###### Short brew commands
 

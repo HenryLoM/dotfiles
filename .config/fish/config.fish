@@ -44,10 +44,14 @@ if status is-interactive
     alias skick  "skhd --restart-service"
     alias sslap  "skhd --stop-service"
 
-    # Updated default commands
+    # Updated commands
+        # default
     alias cd "z"
     alias ls "eza -lh --icons --time-style=+'%Y-%m-%d %H:%M'"
     alias cc "cc -std=c11 -Wall -Wextra -Wpedantic -Wconversion -Wshadow"
+        # custom
+    alias ef "exiftool -a -u -g2"
+    alias ym 'yt-dlp -f ba -x --audio-format mp3 --audio-quality 320K --postprocessor-args "ffmpeg:-ar 44100" -o "%(title)s.%(ext)s"'
 
     # Debian VM
     alias debian-cli "docker run --rm -it debian:latest bash"
@@ -75,7 +79,8 @@ if status is-interactive
     # Audio cleaner
     function clean-audio
         for f in $argv
-            set out (string replace -r '\.mp3$' '_cleaned.mp3' -- "$f")
+            set tmp (mktemp)
+            set out "$tmp.mp3"
             ffmpeg -loglevel error -y -i "$f" \
                 -map 0:a           \
                 -map_metadata -1   \
@@ -88,6 +93,8 @@ if status is-interactive
                 -fflags  +bitexact \
                 -flags:a +bitexact \
                 "$out"
+            and mv -f "$out" "$f"
+            or rm -f "$out"
         end
     end
 
@@ -114,6 +121,8 @@ if status is-interactive
             rm -rf "$DST/$dir"
             cp -R  "$SRC/$dir" "$DST/$dir"
         end
+            # SSH config additionally
+        cp -f "$HOME/.ssh/config" "$HOME/.environment/misc/config"
     end
 
 end

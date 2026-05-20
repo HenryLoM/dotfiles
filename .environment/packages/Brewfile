@@ -1,22 +1,21 @@
 # ==============================
 # Taps
 # ==============================
-tap "TheBoredTeam/homebrew-boring-notch"
 tap "koekeishiya/formulae"
 tap "FelixKratz/formulae"
 
 # ==============================
 # Fonts
 # ==============================
-        # San Francisco
-cask "sf-symbols"
-cask "font-sf-mono"
-        # Ubuntu
-cask "font-ubuntu-mono"
+        # Cozette
+cask "font-cozette"
         # Courier
 cask "font-courier-prime"
         # Nerd Font
 cask "font-symbols-only-nerd-font"
+        # San Francisco
+cask "sf-symbols"
+cask "font-sf-mono"
 
 # ==============================
 # GUI
@@ -29,10 +28,9 @@ cask "ente-auth"           # 2FA authenticator 𐃘 https://github.com/ente-io/e
 cask "simplex"             # e2e messanger     𐃘 https://github.com/simplex-chat/simplex-chat
 cask "session"             # onion messanger   𐃘 https://github.com/session-foundation/session-desktop
         # Utilities
-cask "docker-desktop"                                   # docker gui        𐃘 https://github.com/docker/for-mac
-cask "TheBoredTeam/homebrew-boring-notch/boring-notch"  # notch enhancer    𐃘 https://github.com/TheBoredTeam/boring.notch
-cask "hiddenbar"                                        # menu bar hider    𐃘 https://github.com/dwarvesf/hidden
-cask "maccy"                                            # clipboard manager 𐃘 https://github.com/p0deje/Maccy
+cask "docker-desktop"  # docker gui        𐃘 https://github.com/docker/for-mac
+cask "maccy"           # clipboard manager 𐃘 https://github.com/p0deje/Maccy
+cask "hiddenbar"       # menu bar hider    𐃘 https://github.com/dwarvesf/hidden
 
 # ==============================
 # Terminal
