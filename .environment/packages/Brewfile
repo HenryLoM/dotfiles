@@ -25,6 +25,7 @@ cask "kitty"               # terminal emulator 𐃘 https://github.com/kovidgoya
 cask "zen"                 # browser           𐃘 https://github.com/zen-browser/desktop
 cask "visual-studio-code"  # code editor       𐃘 https://github.com/microsoft/vscode
 cask "ente-auth"           # 2FA authenticator 𐃘 https://github.com/ente-io/ente
+cask "qbittorrent"         # BitTorrent client 𐃘 https://github.com/qbittorrent/qBittorrent
 cask "simplex"             # e2e messanger     𐃘 https://github.com/simplex-chat/simplex-chat
 cask "session"             # onion messanger   𐃘 https://github.com/session-foundation/session-desktop
         # Utilities

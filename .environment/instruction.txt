@@ -38,9 +38,10 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 █▄▄ █▄█ ▄█ ░█░ █▄█ █░▀░█   █▄█ █ █░▀█ █▀█ █▀▄ █ ██▄ ▄█
 ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
 
-𖣠 Mine
-⁃ sshmenu 𐃘 ssh servers selector
+𖣠 My own bash scripts
 ⁃ muz     𐃘 very local music launcher
+⁃ nosh    𐃘 note taker
+⁃ sshmenu 𐃘 ssh servers selector
 
 𖣠 Others
 ⁃ boomtypr   𐃘 https://github.com/yagnikpt/boomtypr      𐃘 typing test

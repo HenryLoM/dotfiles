@@ -1,16 +1,42 @@
 #!/usr/bin/env bash
 
-# ========== ========== ==========
-# Variables
-# ========== ========== ==========
+# ========== help ==========
+case "$1" in
+    -h|--help|help|h)
+        echo "muz - lightweight local music library player (mpv-based)"
+        echo
+        echo "Usage: muz <music-directory>"
+        echo
+        echo "Controls:"
+        echo "    ← / h               back"
+        echo "    ↑ / j               move up"
+        echo "    ↓ / k               move down"
+        echo "    → / l / Enter       select"
+        echo "    c                   toggle chain"
+        echo "    q                   quit"
+        echo
+        echo "Dependencies: mpv (ffmpeg, icat - optional)"
+        exit 0
+        ;;
+esac
 
-ROOT="$HOME/.mymusic"
+# ========== path ==========
 CACHE="$HOME/.cache/muz"
+PATH_CACHE="$CACHE/path"
+mkdir -p "$CACHE"
 
+ROOT="${1:-$(cat "$PATH_CACHE" 2>/dev/null)}"
+
+[[ -z "$ROOT" ]] && { echo "muz: usage: muz <music-directory>" >&2; exit 1; }
+[[ ! -d "$ROOT" ]] && { echo "muz: directory not found: $ROOT" >&2; exit 1; }
+
+echo "$ROOT" > "$PATH_CACHE"
+
+# ========== state ==========
 state="artists"
 cursor=0
 scroll=0
-lyrics_enabled=0
+image_support=0
 chain_enabled=0
 
 artists=()
@@ -20,67 +46,64 @@ tracks=()
 current_artist=""
 current_album=""
 
-# ========== ========== ==========
-# Helpers
-# ========== ========== ==========
-
-get_year() {
-    ffprobe -v error -show_entries format_tags=date \
-        -of default=noprint_wrappers=1:nokey=1 "$1" 2>/dev/null | cut -c1-4
+# ========== deps ==========
+check_dependencies() {
+    local missing=()
+    for cmd; do command -v "$cmd" >/dev/null || missing+=("$cmd"); done
+    ((${#missing[@]})) || return
+    printf 'muz: missing: %s\n' "${missing[*]// /, }"
+    exit 1
 }
 
-get_tracknum() {
-    ffprobe -v error -show_entries format_tags=track \
-        -of default=noprint_wrappers=1:nokey=1 "$1" 2>/dev/null | cut -d'/' -f1
+check_image_support() {
+    [[ -n "$KITTY_WINDOW_ID" || "$TERM_PROGRAM" =~ ^(WezTerm|ghostty)$ ]] &&
+    command -v ffmpeg >/dev/null &&
+    { command -v kitten >/dev/null || command -v kitty >/dev/null; }
 }
 
-fetch_lyrics() {
-    if ! check_dependencies curl jq; then
-        echo "Missing dependencies: curl & jq. Lyrics cannot be fetched."
-        return 1
+# ========== loaders ==========
+load_list() {
+    mapfile -t "$1" < <(
+        find "$2" -mindepth 1 -maxdepth 1 \( -type d -o -type f \( \
+        -iname '*.mp3' -o -iname '*.flac' \) \) \
+        | LC_ALL=C.UTF-8 sort -"$3"
+    )
+}
+
+load_artists() { load_list artists "$ROOT"           "f"; }
+load_albums()  { load_list albums  "$current_artist" "r"; }
+load_tracks()  { load_list tracks  "$current_album"     ; }
+
+# ========== artwork ==========
+add_artwork() {
+    local f="$1"
+    local tmp="$CACHE/cover.jpg"
+
+    # Extract cover art; abort silently if ffmpeg fails or file has no cover
+    ffmpeg -y -i "$f" -an -vcodec copy "$tmp" 2>/dev/null || return
+
+    local w=$(tput cols)
+    local h=$(tput lines)
+    local c=$((h * 5 / 3))
+    ((w < c)) && c=$w
+    local x=$((w - c - 1))
+
+    # Use 'kitty +kitten' or standalone 'kitten' depending on what is installed
+    if command -v kitty >/dev/null 2>&1; then
+        kitty +kitten icat --stdin no --place "${c}x${c}@${x}x1" "$tmp" 2>/dev/null
+    else
+        kitten icat --stdin no --place "${c}x${c}@${x}x1" "$tmp" 2>/dev/null
     fi
 
-    local artist title file
-
-    artist="$(basename "$current_artist")"
-    file="${tracks[$cursor]#*|}"
-    title="$(basename "$file" .mp3)"
-
-    mkdir -p "$CACHE"
-    cache_lyrics_file="$CACHE/${artist}-${title}.lrc"
-
-    [[ -s "$cache_lyrics_file" ]] && { cat "$cache_lyrics_file"; return; }
-
-    curl -s "https://lrclib.net/api/get?artist_name=$(printf '%s' "$artist" \
-        | jq -sRr @uri)&track_name=$(printf '%s' "$title" | jq -sRr @uri)" \
-        | jq -r '.plainLyrics // .syncedLyrics // empty' \
-        | sed 's/\[[0-9:.]*\]//g' \
-        | tee "$cache_lyrics_file"
-    
-    [[ -s "$cache_lyrics_file" ]] || {
-        rm -f "$cache_lyrics_file"; echo "No lyrics fetched."
-    }
+    rm -f "$tmp"
 }
 
+# ========== playback ==========
 play_audio() {
-    file="${files[$cursor]}"
+    local file="${files[$cursor]}"
 
-    # Deal with the temporary cover
-    mkdir -p "$CACHE"
-    chache_cover_file="$CACHE/mpv_cover.jpg"
-    ffmpeg -y -i "$file" -an -vcodec copy "$chache_cover_file" 2>/dev/null
+    ((image_support)) && add_artwork "$file"
 
-    # Put the cover on the screen
-    term_width=$(tput cols)
-    term_height=$(tput lines)
-    c=$((term_height * 5 / 3)); (( term_width < c )) && c=$term_width
-    w=$((term_width - c - 1))
-    kitten icat --stdin no --place ${c}x${c}@${w}x1 "$chache_cover_file"
-
-    # Delete the temporary cover
-    rm -f "$chache_cover_file"
-
-    # Play the audio
     if ((chain_enabled)); then
         mpv --playlist-start="$cursor" \
             --config-dir="$HOME/.config/mpv/music-player" \
@@ -96,158 +119,83 @@ play_audio() {
     fi
 }
 
-check_dependencies() {
-    local missing=()
+# ========== input ==========
+read_key() {
+    IFS= read -rsn1 k
+    [[ $k == $'\x1b' ]] && read -rsn2 -t 0.01 r && k+=$r
 
-    for cmd in "$@"; do
-        command -v "$cmd" >/dev/null 2>&1 || missing+=("$cmd")
-    done
-
-    if (( ${#missing[@]} > 0 )); then
-        echo "Missing: ${missing[*]}" >&2
-        return 1
-    fi
+    case "$k" in
+        $'\x1b[A'|"k") echo up ;;
+        $'\x1b[B'|"j") echo down ;;
+        $'\x1b[C'|"l"|"") echo enter ;;
+        $'\x1b[D'|"h"|$'\x1b') echo back ;;
+        "c") echo toggle_chain ;;
+        "q") echo quit ;;
+    esac
 }
 
-# ========== ========== ==========
-# Loaders
-# ========== ========== ==========
-
-load_artists() {
-    mapfile -t artists < <(
-        find "$ROOT" -mindepth 1 -maxdepth 1 -type d \
-        | LC_ALL=C.UTF-8 sort -f
-    )
-}
-
-load_albums() {
-    mapfile -t albums < <(
-        for d in "$current_artist"/*; do
-            [ -d "$d" ] || continue
-
-            first=""
-            for f in "$d"/*.mp3; do
-                [ -f "$f" ] && { first="$f"; break; }
-            done
-
-            year=$(get_year "$first")
-            printf "%04d|%s\n" "${year:-0000}" "$d"
-        done | sort -r | cut -d'|' -f2
-    )
-}
-
-load_tracks() {
-    mapfile -t tracks < <(
-        for f in "$current_album"/*.mp3; do
-            [ -f "$f" ] || continue
-            tn=$(get_tracknum "$f")
-            printf "%03d|%s\n" "${tn:-999}" "$f"
-        done | sort
-    )
-}
-
-# ========== ========== ==========
-# UI
-# ========== ========== ==========
-
+# ========== ui ==========
 draw() {
-    # Display status bar on top
-    clear
+    # \e[H moves cursor to top-left, \e[J clears from cursor to end of screen.
+    printf '\e[H\e[J'
+
+    local list title suffix cols term_h visible max_scroll i item
+    
     suffix=$(
-        [ "$lyrics_enabled" -eq 1 ] && echo -n " [+ lyrics]"
-        [ "$chain_enabled"  -eq 1 ] && echo -n " [+ chain]"
-    )
+        [[ $image_support -eq 0 ]] && echo -n " [-artworks]"
+        [[ $chain_enabled -eq 1 ]] && echo -n " [+chain]"
+        )
 
     case "$state" in
-        artists) title="Artists";
-                 list=("${artists[@]}") ;;
-        albums)  title="Albums: $(basename "$current_artist")";
-                 list=("${albums[@]}") ;;
-        tracks)  title="Tracks: $(basename "$current_album")";
-                 list=("${tracks[@]}") ;;
+        artists) list=("${artists[@]}"); title="Artists" ;;
+        albums)  list=("${albums[@]}");  title="Albums: ${current_artist##*/}" ;;
+        tracks)  list=("${tracks[@]}");  title="Tracks: ${current_album##*/}"  ;;
     esac
 
-    printf "%s%*s\n" "$title" $(( $(tput cols) - ${#title} )) "$suffix"
-    echo
-
-    # Terminal height
+    cols=$(tput cols)
     term_h=$(tput lines)
-    visible=$((term_h - 3))  # leaving space for the header
+    visible=$((term_h - 3))
 
-    # Adjust scroll when cursor moves
-    if (( cursor <= scroll )); then
-        scroll=$((cursor - visible + 1))
-    elif (( cursor >= scroll + visible - 1 )); then
+    # scrolling logic
+    if (( cursor < scroll )); then
         scroll=$cursor
+    elif (( cursor >= scroll + visible )); then
+        scroll=$(( cursor - visible + 1 ))
     fi
-
-    # Clamp scroll
-    ((scroll < 0)) && scroll=0
+    
     max_scroll=$(( ${#list[@]} - visible ))
-    ((scroll > max_scroll)) && scroll=$max_scroll
-    ((scroll < 0)) && scroll=0
+    (( max_scroll < 0 )) && max_scroll=0
+    (( scroll > max_scroll )) && scroll=$max_scroll
+    (( scroll < 0 )) && scroll=0
 
-    # Render visible window
-    for ((i = scroll; i < scroll + visible && i < ${#list[@]}; i++)); do
-        prefix="  "
-        [ "$i" -eq "$cursor" ] && prefix="> "
+    # print header
+    local pad=$(( cols - ${#title} ))
+    (( pad < 0 )) && pad=0
+    printf "%s%*s\n\n" "$title" "$pad" "$suffix"
 
-        if [ "$state" = "tracks" ]; then
-            entry="${list[$i]}"
-            tn="${entry%%|*}"
-            path="${entry#*|}"
-            name="$(basename "$path" .mp3)"
-
-            printf "%s%d\t%s\n" "$prefix" "$((10#$tn))" "$name"
+    # print list
+    for ((i=scroll; i<scroll+visible && i<${#list[@]}; i++)); do
+        item="${list[$i]##*/}"
+        if (( i == cursor )); then
+            printf ">%s\n" "$item"
         else
-            printf "%s%s\n" "$prefix" "$(basename "${list[$i]}")"
+            printf " %s\n" "$item"
         fi
     done
 }
 
-# ========== ========== ==========
-# Input
-# ========== ========== ==========
-
-read_key() {
-    IFS= read -rsn1 key
-
-    if [[ $key == $'\x1b' ]]; then
-        read -rsn2 -t 0.01 rest
-        key+=$rest
-    fi
-
-    case "$key" in
-        $'\x1b[A'|"k")         echo "up"    ;;
-        $'\x1b[B'|"j")         echo "down"  ;;
-        $'\x1b[C'|"l"|"")      echo "enter" ;;
-        $'\x1b[D'|"h"|$'\x1b') echo "back"  ;;
-        "t") echo "toggle_lyrics" ;;
-        "c") echo "toggle_chain"  ;;
-        "q") echo "quit"          ;;
-        *)   echo ""              ;;
-    esac
-}
-
-# ========== ========== ==========
-# Main
-# ========== ========== ==========
-
-if ! check_dependencies mpv ffprobe; then
-    echo "Missing dependencies: mpv & ffprobe. They are necessary to use muz"
-    exit 1
-fi
-
+# ========== init ==========
+check_dependencies mpv
+check_image_support && image_support=1
 load_artists
 
+# ========== loop ==========
 while true; do
     draw
     key=$(read_key)
 
     case "$key" in
-        up)
-            ((cursor--)); ((cursor<0)) && cursor=0 && scroll=0
-            ;;
+        up) ((cursor--)); ((cursor<0)) && cursor=0 ;;
         down)
             ((cursor++))
             case "$state" in
@@ -260,27 +208,24 @@ while true; do
         enter)
             case "$state" in
                 artists)
-                    current_artist="${artists[$cursor]}"; cursor=0; scroll=0
+                    current_artist="${artists[$cursor]}"
+                    cursor=0; scroll=0
                     load_albums
                     state="albums"
                     ;;
                 albums)
-                    current_album="${albums[$cursor]}"; cursor=0; scroll=0
+                    current_album="${albums[$cursor]}"
+                    cursor=0; scroll=0
                     load_tracks
                     state="tracks"
                     ;;
                 tracks)
-                    files=()
-                    for entry in "${tracks[@]}"; do
-                        files+=("${entry#*|}")
-                    done
-
-                    reset
-
-                    play_audio files
-
+                    files=("${tracks[@]}")
+                    clear
+                    play_audio
+                    clear
                     ;;
-                esac
+            esac
             ;;
         back)
             case "$state" in
@@ -290,15 +235,7 @@ while true; do
             esac
             cursor=0; scroll=0
             ;;
-        toggle_lyrics)
-            ((lyrics_enabled = !lyrics_enabled))
-            ;;
-        toggle_chain)
-            ((chain_enabled = !chain_enabled))
-            ;;
-        quit)
-            clear
-            exit 0
-            ;;
+        toggle_chain) ((chain_enabled=!chain_enabled)) ;;
+        quit) clear; exit 0 ;;
     esac
 done
