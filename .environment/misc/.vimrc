@@ -12,12 +12,6 @@ vnoremap <C-y> "+y
 " Key combination to disable search highlighting
 nnoremap <Esc> :nohlsearch<CR>
 
-" Disable arrow keys for navigation in INSERT mode
-noremap <Up>    <NOP>
-noremap <Down>  <NOP>
-noremap <Left>  <NOP>
-noremap <Right> <NOP>
-
 " Scroll + center cursor
 nnoremap <C-D> <C-D>zz
 nnoremap <C-U> <C-U>zz

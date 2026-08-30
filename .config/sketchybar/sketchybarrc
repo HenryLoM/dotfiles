@@ -10,7 +10,6 @@
 # Right side
 . "$(dirname "$0")/widgets/clock.sh"      # clock
 . "$(dirname "$0")/widgets/battery.sh"    # battery
-. "$(dirname "$0")/widgets/volume.sh"     # volume
 . "$(dirname "$0")/widgets/trash.sh"      # trash
 . "$(dirname "$0")/widgets/clipboard.sh"  # clipboard
 

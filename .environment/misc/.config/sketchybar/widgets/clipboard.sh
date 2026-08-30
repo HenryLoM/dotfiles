@@ -16,7 +16,7 @@ sketchybar --add item clipboard right \
                  background.height=$settings_widget_height \
                  background.corner_radius=$settings_widget_corner_radius \
                  background.padding_left=$settings_background_padding_left \
-                 background.padding_right=$((settings_background_padding_right + 3)) \
+                 background.padding_right=$settings_background_padding_right \
                  background.border_width=$settings_border_width \
                  background.border_color=$colors_border \
                  icon=$icons_clipboard \

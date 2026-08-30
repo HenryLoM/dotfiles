@@ -1,61 +1,69 @@
 ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-█▀▀ ▀▄▀ █▀█ █░░ ▄▀█ █▄░█ ▄▀█ ▀█▀ █ █▀█ █▄░█
-██▄ █░█ █▀▀ █▄▄ █▀█ █░▀█ █▀█ ░█░ █ █▄█ █░▀█
+█▀▀ █ █   █▀▀   █▀ ▀█▀ █▀█ █ █ █▀▀ ▀█▀ █ █ █▀█ █▀▀
+█▀  █ █▄▄ ██▄   ▄█  █  █▀▄ █▄█ █▄▄  █  █▄█ █▀▄ ██▄
 ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
 
-𖣠 File structure
-⁃ packages   𐃘 brew bundle management
-⁃ bin        𐃘 custom binaries
-⁃ wallpapers 𐃘 favorite wallpapers
-⁃ misc       𐃘 different types of important files
-
-𖣠 Files from "misc"
-⁃ user.js       𐃘 move into firefox profile directory.
-⁃ config        𐃘 ~/.ssh/config
-⁃ cozette.dfont 𐃘 move into font book if brew failed.
-⁃ .vimrc        𐃘 ~/.vimrc
-⁃ .config/      𐃘 ~/.config/
+.environment
+├── packages/    → brew bundle management
+├── bin/         → custom binaries
+├── wallpapers/  → favorite wallpapers
+└── misc/        → different types of important files
 
 ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-█▄▄ █▀█ █▀▀ █░█░█
+█▄▄ █▀█ █▀▀ █ █ █
 █▄█ █▀▄ ██▄ ▀▄▀▄▀
 ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
 
-𖣠 Installation
+Installation
+━━━━━━━━━━━━
 ```
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
-echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.bashrc
 eval "$(/opt/homebrew/bin/brew shellenv)"
 ```
 
-𖣠 Brewfile management
-⁃ Update  𐃘 `brew bundle install`
-⁃ Cleanup 𐃘 `brew bundle cleanup --global --force`
+Brewfile management
+━━━━━━━━━━━━━━━━━━━
+⁃ Update  → `brew bundle install`
+⁃ Cleanup → `brew bundle cleanup --force`
 
 ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-█▀▀ █░█ █▀ ▀█▀ █▀█ █▀▄▀█   █▄▄ █ █▄░█ ▄▀█ █▀█ █ █▀▀ █▀
-█▄▄ █▄█ ▄█ ░█░ █▄█ █░▀░█   █▄█ █ █░▀█ █▀█ █▀▄ █ ██▄ ▄█
+█▀▀ █ █ █▀ ▀█▀ █▀█ █▀▄▀█   █▄▄ █ █▄ █ ▄▀█ █▀█ █ █▀▀ █▀
+█▄▄ █▄█ ▄█  █  █▄█ █ ▀ █   █▄█ █ █ ▀█ █▀█ █▀▄ █ ██▄ ▄█
 ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
 
-𖣠 My own bash scripts
-⁃ muz     𐃘 very local music launcher
-⁃ nosh    𐃘 note taker
-⁃ sshmenu 𐃘 ssh servers selector
-
-𖣠 Others
-⁃ boomtypr   𐃘 https://github.com/yagnikpt/boomtypr      𐃘 typing test
-⁃ gpk        𐃘 https://github.com/neur0map/glazepkg      𐃘 package viewer
-⁃ yt-x       𐃘 https://github.com/Benexl/yt-x            𐃘 youtube client
-⁃ termipedia 𐃘 https://github.com/kantiankant/Termipedia 𐃘 wikipedia client
+⁃ muz      → nearly suckless local music player
+⁃ sshmenu  → ssh servers selector
 
 ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-█▀ █▀ █░█   █▀ █▀▀ █▀█ █░█ █▀▀ █▀█ █▀
-▄█ ▄█ █▀█   ▄█ ██▄ █▀▄ ▀▄▀ ██▄ █▀▄ ▄█
+█ █ █▀▄▀█ █▀▀ ▀█▀ ▄▀█ █ █   █▀ █▀▀ ▀█▀ ▀█▀ █ █▄ █ █▀▀ █▀
+    █ ▀ █ ██▄  █  █▀█       ▄█ ██▄  █   █  █ █ ▀█ █▄█ ▄█
 ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
 
-⁃ tavrn      𐃘 `ssh tavrn.sh`              𐃘 chat
-⁃ late       𐃘 `ssh late.sh`               𐃘 chat + music
-⁃ jellyshell 𐃘 `ssh jellyshell.dev`        𐃘 chat + profile
-⁃ sshtron    𐃘 `ssh sshtron.zachlatta.com` 𐃘 tron game
-⁃ frittura   𐃘 `ssh frittura.org -p 2020`  𐃘 maze game
+Metadata
+━━━━━━━━
+⁃ MPEG Write Options        → only ID3v2
+⁃ ID3v2 Version             → ID3v2.4 (UTF-16)
+⁃ ID3v2 Compatibility Mode: → undo iTunes
+
+Artwork
+━━━━━━━
+⁃ Format              → JPEG
+⁃ Compression         → pull to the maximum right
+⁃ Square Ratio (Crop) → Tick
+⁃ Max Size            → 700 x 700 px
+
+Editing
+━━━━━━━
+⁃ Undefined Metadata in Patterns → Replace with placeholder
+⁃ File and Folder Names          → Tick all to Compatible
+
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+█▀▀ █ █▀█ █▀▀ █▀▀ █▀█ ▀▄▀   █▀▀ ▀▄▀ ▀█▀ █▀▀ █▄ █ █▀ █ █▀█ █▄ █ █▀
+█▀  █ █▀▄ ██▄ █▀  █▄█ █ █   ██▄ █ █  █  ██▄ █ ▀█ ▄█ █ █▄█ █ ▀█ ▄█
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+
+Privacy Badger → https://addons.mozilla.org/firefox/addon/privacy-badger17/
+uBlock Origin  → https://addons.mozilla.org/firefox/addon/ublock-origin/
+Unhook         → https://addons.mozilla.org/firefox/addon/youtube-recommended-videos/
+Dark Reader    → https://addons.mozilla.org/firefox/addon/darkreader/
+FoxyProxy      → https://addons.mozilla.org/firefox/addon/foxyproxy-standard/

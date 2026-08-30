@@ -1,241 +1,395 @@
 #!/usr/bin/env bash
 
-# ========== help ==========
+# ==============================
+# Help
+# ==============================
 case "$1" in
-    -h|--help|help|h)
-        echo "muz - lightweight local music library player (mpv-based)"
+    --help|-help|help|--h|-h|h)
+        echo "muz (v2.4) - nearly suckless local music player"
         echo
         echo "Usage: muz <music-directory>"
         echo
         echo "Controls:"
-        echo "    ← / h               back"
         echo "    ↑ / j               move up"
         echo "    ↓ / k               move down"
-        echo "    → / l / Enter       select"
-        echo "    c                   toggle chain"
+        echo "    → / l / Enter       enter directory / play file"
+        echo "    ← / h               go back to parent directory"
+        echo "    c                   enable chain mode"
+        echo "    s                   enable shuffle mode"
+        echo "    r                   enable repeat mode"
         echo "    q                   quit"
         echo
-        echo "Dependencies: mpv (ffmpeg, icat - optional)"
+        echo "Dependencies: mpv"
         exit 0
         ;;
 esac
 
-# ========== path ==========
-CACHE="$HOME/.cache/muz"
-PATH_CACHE="$CACHE/path"
-mkdir -p "$CACHE"
+# ==============================
+# Cache
+# ==============================
+CACHE_DIR="$HOME/.cache/muz"
+CACHED_PATH="$CACHE_DIR/path"
+mkdir -p "$CACHE_DIR"
 
-ROOT="${1:-$(cat "$PATH_CACHE" 2>/dev/null)}"
+ROOT="${1:-$(cat "$CACHED_PATH" 2>/dev/null)}"
+[[   -z "$ROOT" ]] && { echo "muz: usage: muz <music-directory>" >&2; exit 1; }
+[[ ! -d "$ROOT" ]] && { echo "muz: $ROOT is not a directory"     >&2; exit 1; }
+echo "$ROOT" > "$CACHED_PATH"
 
-[[ -z "$ROOT" ]] && { echo "muz: usage: muz <music-directory>" >&2; exit 1; }
-[[ ! -d "$ROOT" ]] && { echo "muz: directory not found: $ROOT" >&2; exit 1; }
+command -v "mpv" >/dev/null || ( echo "muz: missing: mpv" && exit 1 )
 
-echo "$ROOT" > "$PATH_CACHE"
+# ==============================
+# Global state
+# ==============================
+declare -a SUPPORTED_EXTENSIONS=('*.mp3' '*.ogg' '*.opus' '*.aac' '*.flac' '*.wav')
+declare -a ENTRIES=()
+declare -a ENTRY_TYPES=()
+declare -a PATH_STACK=()
 
-# ========== state ==========
-state="artists"
-cursor=0
-scroll=0
-image_support=0
-chain_enabled=0
+CURRENT_DIR=""
+TOTAL=0
+CURSOR=0
 
-artists=()
-albums=()
-tracks=()
+ARTWORK_ENABLED=0
+CHAIN_ENABLED=0
+SHUFFLE_ENABLED=0
+REPEAT_ENABLED=0
 
-current_artist=""
-current_album=""
+META_ARTIST=""
+META_ALBUM=""
+META_YEAR=""
+META_TITLE=""
+META_TRACK=""
 
-# ========== deps ==========
-check_dependencies() {
-    local missing=()
-    for cmd; do command -v "$cmd" >/dev/null || missing+=("$cmd"); done
-    ((${#missing[@]})) || return
-    printf 'muz: missing: %s\n' "${missing[*]// /, }"
-    exit 1
+# ==============================
+# Helpers
+# ==============================
+load_entries() {
+    local dir="$1"
+    local -a dirs=()
+    local -a files=()
+
+    # Get subdirectories
+    while IFS= read -r entry; do
+        [[ -n "$entry" ]] && dirs+=("$entry")
+    done < <(find "$dir" -maxdepth 1 -mindepth 1 -type d | LC_ALL=C.UTF-8 sort -f | while IFS= read -r d; do
+        # Build find args for recursive check
+        local chk_args=()
+        for ext in "${SUPPORTED_EXTENSIONS[@]}"; do
+            chk_args+=(-iname "$ext" -o)
+        done
+        unset 'chk_args[-1]'
+        # Check if directory contains any matching files recursively
+        if find "$d" -type f \( "${chk_args[@]}" \) -print -quit 2>/dev/null | grep -q .; then
+            printf '%s\n' "$d"
+        fi
+    done)
+
+    # Get music files
+    local find_args=()
+    for ext in "${SUPPORTED_EXTENSIONS[@]}"; do
+        find_args+=(-iname "$ext" -o)
+    done
+
+    # Remove trailing -o
+    unset 'find_args[-1]'
+
+    while IFS= read -r entry; do
+        [[ -n "$entry" ]] && files+=("$entry")
+    done < <(find "$dir" -maxdepth 1 -mindepth 1 -type f \( "${find_args[@]}" \) | LC_ALL=C.UTF-8 sort -f)
+
+    # Combine: directories first, then files
+    ENTRIES=("${dirs[@]}" "${files[@]}")
+    ENTRY_TYPES=()
+
+    for ((i = 0; i < ${#dirs[@]}; i++)); do
+        ENTRY_TYPES+=("dir")
+    done
+    for ((i = 0; i < ${#files[@]}; i++)); do
+        ENTRY_TYPES+=("file")
+    done
+
+    TOTAL=${#ENTRIES[@]}
+}
+
+update_current_metadata() {
+    local idx="$CURSOR"
+
+    if [[ "${ENTRY_TYPES[$idx]}" != "file" ]]; then
+        META_ARTIST=""
+        META_ALBUM=""
+        META_YEAR=""
+        META_TITLE="${ENTRIES[$idx]##*/}"
+        META_TRACK=""
+        return
+    fi
+
+    local filepath="${ENTRIES[$idx]}"
+    local tags
+    tags=$(ffprobe -v quiet -show_entries format_tags:stream_tags -of default=noprint_wrappers=1 "$filepath" 2>/dev/null)
+
+    META_ARTIST=$(echo "$tags" | grep -i "^TAG:artist=" | cut -d'=' -f2- | head -1)
+    META_ALBUM=$( echo "$tags" | grep -i "^TAG:album="  | cut -d'=' -f2- | head -1)
+    META_YEAR=$(  echo "$tags" | grep -i "^TAG:date="   | cut -d'=' -f2- | head -1)
+    META_TITLE=$( echo "$tags" | grep -i "^TAG:title="  | cut -d'=' -f2- | head -1)
+    META_TRACK=$( echo "$tags" | grep -i "^TAG:track="  | cut -d'=' -f2- | head -1)
+
+    # Apply defaults
+    META_ARTIST=${META_ARTIST:-Unknown Artist}
+    META_ALBUM=${META_ALBUM:-Unknown Album}
+    META_YEAR=${META_YEAR:-Unknown Year}
+    META_TITLE=${META_TITLE:-${filepath##*/}}
+    META_TRACK=${META_TRACK:--/-}
+}
+
+read_key() {
+    local key
+    IFS= read -rsn1 key
+
+    # Handle escape sequences
+    if [[ "$key" == $'\x1b' ]]; then
+        local key2
+        read -rsn2 -t 0.1 key2
+        key+="$key2"
+    fi
+
+    case "$key" in
+        $'\x1b[A'|k)    echo "up"      ;;
+        $'\x1b[B'|j)    echo "down"    ;;
+        $'\x1b[D'|h)    echo "back"    ;;
+        $'\x1b[C'|l|'') echo "enter"   ;;
+        c)              echo "chain"   ;;
+        s)              echo "shuffle" ;;
+        r)              echo "repeat"  ;;
+        q)              echo "quit"    ;;
+        *)              echo ""        ;;
+    esac
 }
 
 check_image_support() {
     [[ -n "$KITTY_WINDOW_ID" || "$TERM_PROGRAM" =~ ^(WezTerm|ghostty)$ ]] &&
-    command -v ffmpeg >/dev/null &&
     { command -v kitten >/dev/null || command -v kitty >/dev/null; }
 }
 
-# ========== loaders ==========
-load_list() {
-    mapfile -t "$1" < <(
-        find "$2" -mindepth 1 -maxdepth 1 \( -type d -o -type f \( \
-        -iname '*.mp3' -o -iname '*.flac' \) \) \
-        | LC_ALL=C.UTF-8 sort -"$3"
-    )
-}
+# ==============================
+# UI - Playback
+# ==============================
+display_artwork() {
+    (( ARTWORK_ENABLED )) || return
 
-load_artists() { load_list artists "$ROOT"           "f"; }
-load_albums()  { load_list albums  "$current_artist" "r"; }
-load_tracks()  { load_list tracks  "$current_album"     ; }
+    local filepath="$1"
+    local tmp_cover="$CACHE_DIR/cover.jpg"
 
-# ========== artwork ==========
-add_artwork() {
-    local f="$1"
-    local tmp="$CACHE/cover.jpg"
+    # Extract cover art
+    ffmpeg -y -i "$filepath" -an -vcodec copy "$tmp_cover" 2>/dev/null
 
-    # Extract cover art; abort silently if ffmpeg fails or file has no cover
-    ffmpeg -y -i "$f" -an -vcodec copy "$tmp" 2>/dev/null || return
-
-    local w=$(tput cols)
-    local h=$(tput lines)
-    local c=$((h * 5 / 3))
-    ((w < c)) && c=$w
-    local x=$((w - c - 1))
-
-    # Use 'kitty +kitten' or standalone 'kitten' depending on what is installed
-    if command -v kitty >/dev/null 2>&1; then
-        kitty +kitten icat --stdin no --place "${c}x${c}@${x}x1" "$tmp" 2>/dev/null
-    else
-        kitten icat --stdin no --place "${c}x${c}@${x}x1" "$tmp" 2>/dev/null
-    fi
-
-    rm -f "$tmp"
-}
-
-# ========== playback ==========
-play_audio() {
-    local file="${files[$cursor]}"
-
-    ((image_support)) && add_artwork "$file"
-
-    if ((chain_enabled)); then
-        mpv --playlist-start="$cursor" \
-            --config-dir="$HOME/.config/mpv/music-player" \
-            --msg-level=ffmpeg=no,ao=no,vo=no,cplayer=no \
-            --no-video \
-            "${files[@]}"
-    else
-        mpv --config-dir="$HOME/.config/mpv/music-player" \
-            --msg-level=ffmpeg=no,ao=no,vo=no,cplayer=no,osd/libass=no \
-            --no-video \
-            --term-status-msg=' ${time-pos:${=mm\\:ss}} | ${duration:${=mm\\:ss}}' \
-            "${files[$cursor]}"
-    fi
-}
-
-# ========== input ==========
-read_key() {
-    IFS= read -rsn1 k
-    [[ $k == $'\x1b' ]] && read -rsn2 -t 0.01 r && k+=$r
-
-    case "$k" in
-        $'\x1b[A'|"k") echo up ;;
-        $'\x1b[B'|"j") echo down ;;
-        $'\x1b[C'|"l"|"") echo enter ;;
-        $'\x1b[D'|"h"|$'\x1b') echo back ;;
-        "c") echo toggle_chain ;;
-        "q") echo quit ;;
-    esac
-}
-
-# ========== ui ==========
-draw() {
-    # \e[H moves cursor to top-left, \e[J clears from cursor to end of screen.
-    printf '\e[H\e[J'
-
-    local list title suffix cols term_h visible max_scroll i item
-    
-    suffix=$(
-        [[ $image_support -eq 0 ]] && echo -n " [-artworks]"
-        [[ $chain_enabled -eq 1 ]] && echo -n " [+chain]"
-        )
-
-    case "$state" in
-        artists) list=("${artists[@]}"); title="Artists" ;;
-        albums)  list=("${albums[@]}");  title="Albums: ${current_artist##*/}" ;;
-        tracks)  list=("${tracks[@]}");  title="Tracks: ${current_album##*/}"  ;;
-    esac
-
+    # Calculate dimensions
+    local cols lines cover_size x_pos
     cols=$(tput cols)
-    term_h=$(tput lines)
-    visible=$((term_h - 3))
+    lines=$(tput lines)
+    cover_size=$((lines * 5 / 3))
+    (( cols < cover_size )) && cover_size=$cols
+    x_pos=$((cols - cover_size - 1))
 
-    # scrolling logic
-    if (( cursor < scroll )); then
-        scroll=$cursor
-    elif (( cursor >= scroll + visible )); then
-        scroll=$(( cursor - visible + 1 ))
+    # Display using kitty/kitten
+    if command -v kitty >/dev/null 2>&1; then
+        kitty +kitten icat --stdin no --place "${cover_size}x${cover_size}@${x_pos}x1" "$tmp_cover" 2>/dev/null
+    else
+        kitten icat --stdin no --place "${cover_size}x${cover_size}@${x_pos}x1" "$tmp_cover" 2>/dev/null
     fi
-    
-    max_scroll=$(( ${#list[@]} - visible ))
-    (( max_scroll < 0 )) && max_scroll=0
-    (( scroll > max_scroll )) && scroll=$max_scroll
+
+    rm -f "$tmp_cover"
+}
+
+display_metadata() {
+    printf "\e[3;1H\e[1;36m%s\e[0m\n" " ${META_TITLE}"
+    printf "\e[4;1H\e[35m%s\e[0m\n"   " ${META_ALBUM}"
+    printf "\e[5;1H\e[33m%s\e[0m\n"   " ${META_ARTIST}"
+    printf "\e[6;1H\e[2;37m%s\e[0m\n" " ${META_TRACK} | ${META_YEAR}"
+}
+
+play_from_index() {
+    local start_idx="$1"
+    local idx="$start_idx"
+
+    while (( idx < TOTAL )); do
+        if [[ "${ENTRY_TYPES[$idx]}" == "file" ]]; then
+            display_artwork "${ENTRIES[$idx]}"
+            CURSOR="$idx"
+            update_current_metadata
+            display_metadata
+
+            mpv --no-video --no-pause --no-keep-open \
+                --msg-level=ffmpeg=no,ao=no,vo=no,cplayer=no,osd/libass=no \
+                --term-status-msg=' ${time-pos} | ${duration}' \
+                --display-tags=no \
+                "${ENTRIES[$idx]}"
+
+            (( $? )) && break  # non-zero exit (mpv error handling)
+            ((   REPEAT_ENABLED ))  && continue; clear                                  # repeat enabled  - prevent index changing
+            ((   SHUFFLE_ENABLED )) && { idx=$(( RANDOM % TOTAL )); continue; clear; }  # shuffle enabled - dynamically randomize index
+            (( ! CHAIN_ENABLED  ))  && break; clear                                     # chain disabled  - stop playing
+        fi
+        (( idx++ ))
+    done
+}
+
+# ==============================
+# UI - Menu
+# ==============================
+draw() {
+    (( TOTAL == 0 )) && return
+
+    local suffix=""
+    (( ARTWORK_ENABLED == 0 )) && suffix+=" [-artworks]"
+    (( CHAIN_ENABLED   == 1 )) && suffix+=" [+chain]"
+    (( SHUFFLE_ENABLED == 1 )) && suffix+=" [+shuffle]"
+    (( REPEAT_ENABLED  == 1 )) && suffix+=" [+repeat]"
+
+    local cols lines visible scroll
+    cols=$(tput cols)
+    lines=$(tput lines)
+    visible=$((lines - 1))
+    (( visible < 1 )) && visible=1
+
+    # Calculate scroll position to keep cursor centered
+    scroll=$((CURSOR - visible / 2))
+    (( scroll < 0 )) && scroll=0
+    (( scroll > TOTAL - visible )) && scroll=$((TOTAL - visible))
     (( scroll < 0 )) && scroll=0
 
-    # print header
-    local pad=$(( cols - ${#title} ))
-    (( pad < 0 )) && pad=0
-    printf "%s%*s\n\n" "$title" "$pad" "$suffix"
+    # Clear screen and hide cursor
+    printf '\e[H\e[J\e[?25l'
 
-    # print list
-    for ((i=scroll; i<scroll+visible && i<${#list[@]}; i++)); do
-        item="${list[$i]##*/}"
-        if (( i == cursor )); then
-            printf ">%s\n" "$item"
+    # Calculate panel positions
+    local panel_start=$((cols / 2 + 1))
+    (( panel_start < 35 )) && panel_start=35
+    local list_width=$((panel_start - 2))
+
+    # Draw header with current directory name
+    local dir_name="${CURRENT_DIR##*/}"
+    printf "\e[1;1H\e[1;36m%s\e[0m" "${dir_name:-Root}"
+
+    # Draw Track Info panel (right side)
+    printf "\e[1;${panel_start}H\e[1;36mTrack Info\e[0m"
+    if [[ -n "$META_ARTIST" ]]; then
+        printf "\e[2;${panel_start}HArtist: \e[33m%-${list_width}s\e[0m" "$META_ARTIST"
+        printf "\e[3;${panel_start}HAlbum:  \e[33m%-${list_width}s\e[0m" "$META_ALBUM"
+        printf "\e[4;${panel_start}HYear:   \e[33m%-${list_width}s\e[0m" "$META_YEAR"
+        printf "\e[5;${panel_start}HTrack:  \e[33m%-${list_width}s\e[0m" "$META_TITLE"
+        printf "\e[6;${panel_start}HPos:    \e[33m%-${list_width}s\e[0m" "$META_TRACK"
+    else
+        printf "\e[2;${panel_start}H\e[2;37m(Directory)\e[0m"
+    fi
+
+    # Draw status suffix
+    [[ -n "$suffix" ]] && printf "\e[${lines};$((cols - ${#suffix} + 1))H\e[32m%s\e[0m" "$suffix"
+
+    # Draw file/directory list (left side)
+    for ((i = 0; i < visible; i++)); do
+        local idx=$((i + scroll))
+        (( idx >= TOTAL )) && break
+
+        local name="${ENTRIES[$idx]##*/}"
+        local type="${ENTRY_TYPES[$idx]}"
+
+        # Add directory indicator
+        [[ "$type" == "dir" ]] && name="📁 $name/"
+
+        # Truncate long names
+        (( ${#name} > list_width )) && name="${name:0:$((list_width-3))}..."
+
+        local line=$((i + 2))  # Start from line 2 (after header)
+
+        if (( idx == CURSOR )); then
+            printf "\e[%d;1H\e[7m%-*s\e[0m" "$line" "$list_width" "$name"
         else
-            printf " %s\n" "$item"
+            printf "\e[%d;1H%-*s" "$line" "$list_width" "$name"
         fi
     done
 }
 
-# ========== init ==========
-check_dependencies mpv
-check_image_support && image_support=1
-load_artists
+# ==============================
+# Navigation & Buttons
+# ==============================
+navigate_up() {
+    (( CURSOR > 0 )) && { (( CURSOR-- )); update_current_metadata; }
+}
 
-# ========== loop ==========
+navigate_down() {
+    (( CURSOR < TOTAL - 1 )) && { (( CURSOR++ )); update_current_metadata; }
+}
+
+navigate_back() {
+    if (( ${#PATH_STACK[@]} > 1 )); then
+        unset 'PATH_STACK[-1]'
+        CURRENT_DIR="${PATH_STACK[-1]}"
+        load_entries "$CURRENT_DIR"
+        CURSOR=0
+        update_current_metadata
+    fi
+}
+
+navigate_enter() {
+    (( TOTAL == 0 )) && return
+
+    if [[ "${ENTRY_TYPES[$CURSOR]}" == "dir" ]]; then
+        # Enter directory
+        PATH_STACK+=("${ENTRIES[$CURSOR]}")
+        CURRENT_DIR="${ENTRIES[$CURSOR]}"
+        load_entries "$CURRENT_DIR"
+        CURSOR=0
+        update_current_metadata
+    else
+        # Play file(s)
+        clear
+        play_from_index "$CURSOR"
+        clear
+    fi
+}
+
+navigate_quit() {
+    clear; exit 0
+}
+
+navigate_chain() {
+    (( CHAIN_ENABLED = !CHAIN_ENABLED ))
+    SHUFFLE_ENABLED=0
+    REPEAT_ENABLED=0
+}
+
+navigate_shuffle() {
+    (( SHUFFLE_ENABLED = !SHUFFLE_ENABLED ))
+    CHAIN_ENABLED=0
+    REPEAT_ENABLED=0
+}
+
+navigate_repeat() {
+    (( REPEAT_ENABLED = !REPEAT_ENABLED ))
+    CHAIN_ENABLED=0
+    SHUFFLE_ENABLED=0
+}
+
+# ==============================
+# Entry Point
+# ==============================
+PATH_STACK=("$ROOT")
+CURRENT_DIR="$ROOT"
+load_entries "$CURRENT_DIR"
+CURSOR=0
+update_current_metadata
+check_image_support && ARTWORK_ENABLED=1
+
 while true; do
     draw
-    key=$(read_key)
-
-    case "$key" in
-        up) ((cursor--)); ((cursor<0)) && cursor=0 ;;
-        down)
-            ((cursor++))
-            case "$state" in
-                artists) max=$((${#artists[@]}-1)) ;;
-                albums)  max=$((${#albums[@]}-1))  ;;
-                tracks)  max=$((${#tracks[@]}-1))  ;;
-            esac
-            ((cursor>max)) && cursor=$max
-            ;;
-        enter)
-            case "$state" in
-                artists)
-                    current_artist="${artists[$cursor]}"
-                    cursor=0; scroll=0
-                    load_albums
-                    state="albums"
-                    ;;
-                albums)
-                    current_album="${albums[$cursor]}"
-                    cursor=0; scroll=0
-                    load_tracks
-                    state="tracks"
-                    ;;
-                tracks)
-                    files=("${tracks[@]}")
-                    clear
-                    play_audio
-                    clear
-                    ;;
-            esac
-            ;;
-        back)
-            case "$state" in
-                albums) state="artists" ;;
-                tracks) state="albums" ;;
-                *) clear; exit ;;
-            esac
-            cursor=0; scroll=0
-            ;;
-        toggle_chain) ((chain_enabled=!chain_enabled)) ;;
-        quit) clear; exit 0 ;;
+    case "$(read_key)" in
+        up)      navigate_up      ;;
+        down)    navigate_down    ;;
+        back)    navigate_back    ;;
+        enter)   navigate_enter   ;;
+        quit)    navigate_quit    ;;
+        chain)   navigate_chain   ;;
+        shuffle) navigate_shuffle ;;
+        repeat)  navigate_repeat  ;;
     esac
 done

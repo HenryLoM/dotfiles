@@ -32,8 +32,6 @@ This repo exists to save the configuration and image of my working machine - so 
     ```bash
     # Install Brew (if not already present)
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
-    echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.bashrc
     eval "$(/opt/homebrew/bin/brew shellenv)"
 
     # Move to the necessary directory
@@ -41,7 +39,7 @@ This repo exists to save the configuration and image of my working machine - so 
 
     # Apply bundle (Brewfile) configuration & Remove odd binaries
     brew bundle install
-    brew bundle cleanup --global --force
+    brew bundle cleanup --force
     ```
 
 3. Later aliases from the fish config become available.
@@ -58,6 +56,7 @@ This repo exists to save the configuration and image of my working machine - so 
 |---------|---------|-------------|
 | `bb-install` | Installs binaries according to the Brewfile                 | `brew bundle --file=~/.environment/packages/Brewfile` |
 | `bb-prune`   | Prunes binaries that are not from the Brewfile              | `brew bundle --file=~/.environment/packages/Brewfile --force cleanup` |
+| `bb-trust`   | Trusts taps from the Brewfile via the bash script           | `source ~/.environment/packages/Trust-list` |
 | `bb-sync`    | Both prunes and installs binaries according to the Brewfile | `bb-prune && bb-install` |
 | `nudge`      | Starts a daemon                                             | `brew services start` |
 | `kick`       | Restarts a daemon                                           | `brew services restart` |

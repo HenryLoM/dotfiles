@@ -22,4 +22,9 @@ sketchybar --add item trash right \
                  icon=$icons_trash_idle \
                  icon.padding_left=$settings_icon_padding_left \
                  icon.padding_right=$settings_icon_padding_left \
-                 click_script="$CONFIG_DIR/helpers/trash_scripts.sh"
+                 click_script='
+                     osascript -e "tell application \"Finder\" to empty the trash"
+                     sketchybar --set trash icon="'"$icons_trash_empty"'"
+                     afplay "/System/Library/Components/CoreAudio.component/Contents/SharedSupport/SystemSounds/finder/empty trash.aif"
+                     sketchybar --set trash icon="'"$icons_trash_idle"'"
+                 '

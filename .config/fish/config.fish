@@ -11,7 +11,7 @@ if status is-interactive
         # External
     fish_add_path -g --append "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/"  # "code" command
     fish_add_path -g --append $HOME/.spicetify                                                    # spicetify
-    
+
     # Disables
     set -g  fish_greeting              # fish greeting
     set -gx HOMEBREW_NO_AUTO_UPDATE 1  # homebrew auto-updating
@@ -26,23 +26,20 @@ if status is-interactive
     # ==============================
 
     # Quick Brewfile management
-    alias bb-install "brew bundle --file=~/.environment/packages/Brewfile"
+    alias bb-install "brew bundle --file=~/.environment/packages/Brewfile --force install"
     alias bb-prune   "brew bundle --file=~/.environment/packages/Brewfile --force cleanup"
-    alias bb-sync    "bb-prune && bb-install"
+    alias bb-trust   "source ~/.environment/packages/Trust-list"
+    alias bb-sync    "bb-prune && bb-trust && bb-install"
 
     # Quick daemon runners
         # for brew
     alias nudge "brew services start"
     alias kick  "brew services restart"
     alias slap  "brew services stop"
-        # for yabai
-    alias ynudge "yabai --start-service"
-    alias ykick  "yabai --restart-service"
-    alias yslap  "yabai --stop-service"
         # for skhd
-    alias snudge "skhd --start-service"
-    alias skick  "skhd --restart-service"
-    alias sslap  "skhd --stop-service"
+    alias skhd-nudge "skhd --start-service"
+    alias skhd-kick  "skhd --restart-service"
+    alias skhd-slap  "skhd --stop-service"
 
     # Updated commands
         # default
@@ -51,10 +48,11 @@ if status is-interactive
     alias cc "cc -std=c11 -Wall -Wextra -Wpedantic -Wconversion -Wshadow"
         # custom
     alias ef "exiftool -a -u -g2"
-    alias ym 'yt-dlp -f ba -x --audio-format mp3 --audio-quality 320K --postprocessor-args "ffmpeg:-ar 44100" -o "%(title)s.%(ext)s"'
-
-    # Debian VM
+    alias ym 'yt-dlp -f ba -o "%(title)s.%(ext)s"'
+    alias yv 'yt-dlp -f "bv*+ba/b" -o "%(title)s.%(ext)s"'
+        # shortcuts
     alias debian-cli "docker run --rm -it debian:latest bash"
+    alias note       "toast ~/.mylife/archive/texts"
 
     # ==============================
     # Functions
@@ -67,6 +65,11 @@ if status is-interactive
         else
             command sudo $argv
         end
+    end
+
+    # WebP convertor
+    function wb
+        cwebp -q 100 -m 6 $argv -o (string replace -r '\.(png|jpe?g)$' '.webp' $argv)
     end
 
     # Metadata cleaner
@@ -111,18 +114,18 @@ if status is-interactive
     # Sync my dotfiles with .mylife
     function sync-environment
             # Define paths
-        set SRC  "$HOME/.config"
-        set DST  "$HOME/.environment/misc/.config"
+        set SRC "$HOME/.config"
+        set DST "$HOME/.environment/misc/.config"
             # Ensure destination exists
         mkdir -p "$DST"
             # Sync dotfiles
         cp -f "$SRC/starship.toml" "$DST/starship.toml"
-        for dir in yabai skhd sketchybar borders fish kitty mpv fastfetch
+        for dir in skhd sketchybar borders fish kitty mpv fastfetch
             rm -rf "$DST/$dir"
             cp -R  "$SRC/$dir" "$DST/$dir"
         end
-            # SSH config additionally
-        cp -f "$HOME/.ssh/config" "$HOME/.environment/misc/config"
     end
 
 end
+
+fish_add_path /Users/henrylom/.spicetify

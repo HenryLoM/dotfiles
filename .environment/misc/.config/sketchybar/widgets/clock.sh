@@ -12,6 +12,7 @@
 # ==============================
 sketchybar --add item clock right \
            --set clock \
+                 update_freq=$settings_global_update_freq \
                  background.color=$colors_widget \
                  background.height=$settings_widget_height \
                  background.corner_radius=$settings_widget_corner_radius \
@@ -23,7 +24,6 @@ sketchybar --add item clock right \
                  icon.padding_left=$settings_icon_padding_left \
                  icon.padding_right=$settings_icon_padding_right \
                  label.padding_left=$settings_label_padding_left \
-                 label.padding_right=$settings_label_padding_right \
-                 label.font="$settings_fontfamily_regular:Bold:$settings_clocklabel_size" \
-                 update_freq=$settings_global_update_freq \
-                 script="sketchybar --set \$NAME label=\"\$(date '+%d %b %I:%M %p')\""
+                 label.padding_right=0 \
+                 label.font="$settings_fontfamily_regular:Medium:$settings_label_size" \
+                 script="sketchybar --set \$NAME label=\"\$(date '+%I:%M %p')\""
