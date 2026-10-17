@@ -1,13 +1,13 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 options=(
-    style=round
+    style=square
     width=2.0
     hidpi=on
     ax_focus=off
     order=below
     active_color=0xffd0d0d0
-    inactive_color=0xffa0a0a0
+    inactive_color= 0xffa0a0a0
     whitelist="kitty"
 )
 

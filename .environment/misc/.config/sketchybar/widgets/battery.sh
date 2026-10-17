@@ -26,8 +26,7 @@ sketchybar --add item battery right \
                  label.padding_right=$settings_label_padding_right \
                  script='
                      PMSET_OUTPUT=$(pmset -g batt)
-                     BATTERY_INFO=$(echo "$PMSET_OUTPUT" | tail -1)
-                     PERCENT=$(echo "$BATTERY_INFO" | grep -Eo "[0-9]+%" | tr -d "%")
+                     PERCENT=$(echo "$PMSET_OUTPUT" | grep -Eo '[0-9]+%' | head -1 | tr -d '%')
                      if echo "$PMSET_OUTPUT" | grep -q "AC Power"; then
                          ICON="'"$icons_battery_charging"'"
                      else

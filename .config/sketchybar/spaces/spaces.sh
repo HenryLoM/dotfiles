@@ -20,7 +20,7 @@ for i in {1..10}; do
             icon.padding_left=0 \
             icon.padding_right=$settings_locked_space_padding_right \
             icon.font="$settings_fontfamily_regular:Medium:$settings_space_size" \
-            click_script="yabai -m space --focus $i" \
+            click_script="osascript -e 'tell application \"System Events\" to key code 160'" \
             script="if [ \"\$SELECTED\" = \"true\" ]; then sketchybar --set \$NAME icon=\"$icons_space_active\"; else sketchybar --set \$NAME icon=\"$icons_space_inactive\"; fi" \
         --subscribe space.$i space_change mouse.clicked
 done

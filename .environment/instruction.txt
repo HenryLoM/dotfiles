@@ -23,16 +23,17 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 
 Brewfile management
 ━━━━━━━━━━━━━━━━━━━
-⁃ Update  → `brew bundle install`
-⁃ Cleanup → `brew bundle cleanup --force`
+⁃ Update  → `/opt/homebrew/bin/brew bundle install`
+⁃ Cleanup → `/opt/homebrew/bin/brew bundle cleanup --force`
 
 ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
 █▀▀ █ █ █▀ ▀█▀ █▀█ █▀▄▀█   █▄▄ █ █▄ █ ▄▀█ █▀█ █ █▀▀ █▀
 █▄▄ █▄█ ▄█  █  █▄█ █ ▀ █   █▄█ █ █ ▀█ █▀█ █▀▄ █ ██▄ ▄█
 ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
 
-⁃ muz      → nearly suckless local music player
-⁃ sshmenu  → ssh servers selector
+⁃ muz     → nearly suckless local music player
+⁃ chare   → minimal local file sharing
+⁃ youtube → terminal YouTube client
 
 ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
 █ █ █▀▄▀█ █▀▀ ▀█▀ ▄▀█ █ █   █▀ █▀▀ ▀█▀ ▀█▀ █ █▄ █ █▀▀ █▀

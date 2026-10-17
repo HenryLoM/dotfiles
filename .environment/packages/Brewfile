@@ -2,8 +2,6 @@
 # Taps
 # ==============================
 tap "paradise-runner/tap", trusted: true
-tap "neur0map/tap",        trusted: true
-tap "yagnikpt/tap",        trusted: true
 tap "asmvik/formulae",     trusted: true
 tap "FelixKratz/formulae", trusted: true
 
@@ -14,37 +12,27 @@ cask "font-cozette"
 cask "font-symbols-only-nerd-font"
 
 # ==============================
-# GUI
+# Desktop
 # ==============================
-        # Applications
 cask "kitty"               # terminal emulator > https://github.com/kovidgoyal/kitty
-cask "zen"                 # browser           > https://github.com/zen-browser/desktop
-cask "visual-studio-code"  # code editor       > https://github.com/microsoft/vscode
 cask "ente-auth"           # 2FA authenticator > https://github.com/ente-io/ente
 cask "localsend"           # file sharing      > https://github.com/localsend/localsend
-cask "qbittorrent"         # BitTorrent client > https://github.com/qbittorrent/qBittorrent
-        # Utilities
-cask "maccy"           # clipboard manager > https://github.com/p0deje/Maccy
 
 # ==============================
 # Terminal
 # ==============================
-        # Shell & Terminal
+        # Shell
 brew "fish"      # shell    > https://github.com/fish-shell/fish-shell
 brew "bash"      # og shell > https://cgit.git.savannah.gnu.org/cgit/bash.git
 brew "starship"  # prompt   > https://github.com/starship/starship
         # TUI programs
-brew "paradise-runner/tap/toast"  # TUI IDE        > https://github.com/paradise-runner/toast
-brew "neur0map/tap/gpk"           # package viewer > https://github.com/neur0map/glazepkg
-cask "yagnikpt/tap/boomtypr"      # typing test    > https://github.com/yagnikpt/boomtypr
-brew "vim"                        # text editor    > https://github.com/vim/vim
+brew "paradise-runner/tap/toast"  # TUI IDE > https://github.com/paradise-runner/toast
         # ClI tools
 brew "git"       # version contol             > https://git.kernel.org/pub/scm/git/git.git
 brew "mpv"       # video player               > https://github.com/mpv-player/mpv
 brew "unar"      # universal unarchiving tool > https://github.com/ashang/unar
 brew "exiftool"  # meta-data reader + cleaner > https://github.com/exiftool/exiftool
 brew "ffmpeg"    # media converter            > https://github.com/FFmpeg/FFmpeg
-brew "webp"      # webp converter             > https://github.com/webmproject/libwebp
         # Commands
 brew "zoxide"     # better "cd"       > https://github.com/ajeetdsouza/zoxide
 brew "eza"        # better "ls"       > https://github.com/eza-community/eza
@@ -56,10 +44,10 @@ brew "fastfetch"  # system info print > https://github.com/fastfetch-cli/fastfet
 # ==============================
 # macOS specific
 # ==============================
-brew "asmvik/formulae/skhd"            # hotkey daemon   > https://github.com/asmvik/skhd
-brew "FelixKratz/formulae/sketchybar"  # menu bar        > https://github.com/FelixKratz/SketchyBar
-brew "FelixKratz/formulae/borders"     # extra borders   > https://github.com/FelixKratz/JankyBorders
-brew "mole"                            # tui uninstaller > https://github.com/tw93/Mole
+brew "asmvik/formulae/skhd"            # hotkey daemon     > https://github.com/asmvik/skhd
+brew "FelixKratz/formulae/sketchybar"  # menu bar          > https://github.com/FelixKratz/SketchyBar
+brew "mole"                            # tui uninstaller   > https://github.com/tw93/Mole
+cask "maccy"                           # clipboard manager > https://github.com/p0deje/Maccy
 
 # ==============================
 # Programming

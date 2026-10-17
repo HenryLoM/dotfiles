@@ -1,7 +1,5 @@
 #!/usr/bin/env fish
 
-brew trust felixkratz/formulae  # Sketchybar + JankyBorders
+brew trust felixkratz/formulae  # sketchybar
 brew trust asmvik/formulae      # skhd
 brew trust paradise-runner/tap  # toast
-brew trust neur0map/tap         # gpk
-brew trust yagnikpt/tap         # boomtypr

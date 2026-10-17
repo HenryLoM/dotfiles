@@ -5,10 +5,5 @@
 # ==============================
 alt - return : open -a  "Finder"
 alt - k      : open -na "kitty"
+alt - s      : open -a  "Safari"
 alt - v      : open -a  "Visual Studio Code"
-alt - z      : open -a  "Zen"
-
-# ==============================
-# Terminal
-# ==============================
-alt - m : open -a "kitty" --args muz

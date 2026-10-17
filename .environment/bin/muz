@@ -3,15 +3,14 @@
 # ==============================
 # Help
 # ==============================
-case "$1" in
-    --help|-help|help|--h|-h|h)
+case "${1:-}" in --help|-help|help|--h|-h|h)
         echo "muz (v2.4) - nearly suckless local music player"
         echo
         echo "Usage: muz <music-directory>"
         echo
         echo "Controls:"
-        echo "    ↑ / j               move up"
-        echo "    ↓ / k               move down"
+        echo "    ↑ / k               move up"
+        echo "    ↓ / j               move down"
         echo "    → / l / Enter       enter directory / play file"
         echo "    ← / h               go back to parent directory"
         echo "    c                   enable chain mode"
@@ -19,10 +18,20 @@ case "$1" in
         echo "    r                   enable repeat mode"
         echo "    q                   quit"
         echo
-        echo "Dependencies: mpv"
+        echo "Dependencies: mpv ffmpeg ffprobe tput"
+        echo "Cache: ~/.cache/muz/"
         exit 0
         ;;
 esac
+
+# ==============================
+# Dependencies
+# ==============================
+dependencies=(mpv ffmpeg ffprobe tput)
+for cmd in "${dependencies[@]}"; do
+    command -v "$cmd" >/dev/null 2>&1 || { printf 'muz: missing dependency: %s\n' "$cmd" >&2; missing=1; }
+done
+(( !${missing:-0} )) || exit 1
 
 # ==============================
 # Cache
@@ -35,8 +44,6 @@ ROOT="${1:-$(cat "$CACHED_PATH" 2>/dev/null)}"
 [[   -z "$ROOT" ]] && { echo "muz: usage: muz <music-directory>" >&2; exit 1; }
 [[ ! -d "$ROOT" ]] && { echo "muz: $ROOT is not a directory"     >&2; exit 1; }
 echo "$ROOT" > "$CACHED_PATH"
-
-command -v "mpv" >/dev/null || ( echo "muz: missing: mpv" && exit 1 )
 
 # ==============================
 # Global state
@@ -226,9 +233,9 @@ play_from_index() {
                 "${ENTRIES[$idx]}"
 
             (( $? )) && break  # non-zero exit (mpv error handling)
-            ((   REPEAT_ENABLED ))  && continue; clear                                  # repeat enabled  - prevent index changing
-            ((   SHUFFLE_ENABLED )) && { idx=$(( RANDOM % TOTAL )); continue; clear; }  # shuffle enabled - dynamically randomize index
-            (( ! CHAIN_ENABLED  ))  && break; clear                                     # chain disabled  - stop playing
+            ((   REPEAT_ENABLED ))  && { clear; continue; }                             # repeat enabled  - prevent index changing
+            ((   SHUFFLE_ENABLED )) && { idx=$(( RANDOM % TOTAL )); clear; continue; }  # shuffle enabled - dynamically randomize index
+            (( ! CHAIN_ENABLED  ))  && { clear; break; }                                # chain disabled  - stop playing
         fi
         (( idx++ ))
     done
@@ -373,6 +380,7 @@ navigate_repeat() {
 # ==============================
 # Entry Point
 # ==============================
+trap 'printf "\e[?25h\e[0m\e[?1049l"; clear' EXIT
 PATH_STACK=("$ROOT")
 CURRENT_DIR="$ROOT"
 load_entries "$CURRENT_DIR"

@@ -29,17 +29,12 @@ if status is-interactive
     alias bb-install "brew bundle --file=~/.environment/packages/Brewfile --force install"
     alias bb-prune   "brew bundle --file=~/.environment/packages/Brewfile --force cleanup"
     alias bb-trust   "source ~/.environment/packages/Trust-list"
-    alias bb-sync    "bb-prune && bb-trust && bb-install"
+    alias bb-sync    "bb-trust && bb-prune && bb-install"
 
     # Quick daemon runners
-        # for brew
     alias nudge "brew services start"
     alias kick  "brew services restart"
     alias slap  "brew services stop"
-        # for skhd
-    alias skhd-nudge "skhd --start-service"
-    alias skhd-kick  "skhd --restart-service"
-    alias skhd-slap  "skhd --stop-service"
 
     # Updated commands
         # default
@@ -48,57 +43,26 @@ if status is-interactive
     alias cc "cc -std=c11 -Wall -Wextra -Wpedantic -Wconversion -Wshadow"
         # custom
     alias ef "exiftool -a -u -g2"
-    alias ym 'yt-dlp -f ba -o "%(title)s.%(ext)s"'
-    alias yv 'yt-dlp -f "bv*+ba/b" -o "%(title)s.%(ext)s"'
-        # shortcuts
-    alias debian-cli "docker run --rm -it debian:latest bash"
-    alias note       "toast ~/.mylife/archive/texts"
+    alias ym 'yt-dlp -f ba         -o "%(title)s.%(ext)s" --cookies-from-browser safari'
+    alias yv 'yt-dlp -f "bv*+ba/b" -o "%(title)s.%(ext)s" --cookies-from-browser safari'
 
     # ==============================
     # Functions
     # ==============================
 
-    # Old "sudo !!"" trick
-    function sudo
-        if test "$argv" = "!!"
-            eval command sudo $history[1]
-        else
-            command sudo $argv
-        end
-    end
-
-    # WebP convertor
-    function wb
-        cwebp -q 100 -m 6 $argv -o (string replace -r '\.(png|jpe?g)$' '.webp' $argv)
-    end
-
     # Metadata cleaner
     function clean-metadata
-        exiftool -all= -overwrite_original_in_place -r $argv           # Generic metadata
-        xattr -rc $argv                                                # macOS info
-        find $argv -exec SetFile -d (date '+%m/%d/%Y %H:%M:%S') {} \;  # Birth timestamp
+        for f in $argv; test -f "$f"; or return 1; end        # Forbid directories
+        for f in $argv
+            exiftool -all= -overwrite_original_in_place "$f"  # Generic metadata
+            xattr -c "$f"                                     # macOS info
+            SetFile -d (date '+%m/%d/%Y %H:%M:%S') "$f"       # Birth timestamp
+        end
     end
 
-    # Audio cleaner
-    function clean-audio
-        for f in $argv
-            set tmp (mktemp)
-            set out "$tmp.mp3"
-            ffmpeg -loglevel error -y -i "$f" \
-                -map 0:a           \
-                -map_metadata -1   \
-                -map_chapters -1   \
-                -vn -sn -dn        \
-                -c:a copy          \
-                -write_xing    0   \
-                -id3v2_version 0   \
-                -write_id3v1   0   \
-                -fflags  +bitexact \
-                -flags:a +bitexact \
-                "$out"
-            and mv -f "$out" "$f"
-            or rm -f "$out"
-        end
+    # WebM to Opus converter
+    function webm-to-opus
+        ffmpeg -i "$argv[1]" -map 0:a:0 -c:a copy (string replace -r '\.webm$' '.opus' "$argv[1]")
     end
 
     # SSH key creator
@@ -111,7 +75,7 @@ if status is-interactive
         ssh-keygen -t ed25519 -f $keyfile
     end
 
-    # Sync my dotfiles with .mylife
+    # Sync my dotfiles with .environment
     function sync-environment
             # Define paths
         set SRC "$HOME/.config"
@@ -120,12 +84,10 @@ if status is-interactive
         mkdir -p "$DST"
             # Sync dotfiles
         cp -f "$SRC/starship.toml" "$DST/starship.toml"
-        for dir in skhd sketchybar borders fish kitty mpv fastfetch
+        for dir in fish kitty skhd sketchybar borders fastfetch mpv
             rm -rf "$DST/$dir"
             cp -R  "$SRC/$dir" "$DST/$dir"
         end
     end
 
 end
-
-fish_add_path /Users/henrylom/.spicetify

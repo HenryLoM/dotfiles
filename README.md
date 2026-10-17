@@ -58,6 +58,7 @@ This repo exists to save the configuration and image of my working machine - so 
 | `bb-prune`   | Prunes binaries that are not from the Brewfile              | `brew bundle --file=~/.environment/packages/Brewfile --force cleanup` |
 | `bb-trust`   | Trusts taps from the Brewfile via the bash script           | `source ~/.environment/packages/Trust-list` |
 | `bb-sync`    | Both prunes and installs binaries according to the Brewfile | `bb-prune && bb-install` |
+| **Daemons** | | |
 | `nudge`      | Starts a daemon                                             | `brew services start` |
 | `kick`       | Restarts a daemon                                           | `brew services restart` |
 | `slap`       | Stops a daemon                                              | `brew services stop` |
