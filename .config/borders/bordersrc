@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 options=(
     style=square
@@ -7,8 +7,8 @@ options=(
     ax_focus=off
     order=below
     active_color=0xffd0d0d0
-    inactive_color= 0xffa0a0a0
-    whitelist="kitty"
+    inactive_color=0xff464646
+    whitelist=rio
 )
 
 borders "${options[@]}"

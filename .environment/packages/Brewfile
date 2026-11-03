@@ -14,9 +14,9 @@ cask "font-symbols-only-nerd-font"
 # ==============================
 # Desktop
 # ==============================
-cask "kitty"               # terminal emulator > https://github.com/kovidgoyal/kitty
-cask "ente-auth"           # 2FA authenticator > https://github.com/ente-io/ente
-cask "localsend"           # file sharing      > https://github.com/localsend/localsend
+cask "rio"       # terminal emulator > https://github.com/raphamorim/rio
+cask "ente-auth" # 2FA authenticator > https://github.com/ente-io/ente
+cask "localsend" # file sharing      > https://github.com/localsend/localsend
 
 # ==============================
 # Terminal
@@ -33,10 +33,10 @@ brew "mpv"       # video player               > https://github.com/mpv-player/mp
 brew "unar"      # universal unarchiving tool > https://github.com/ashang/unar
 brew "exiftool"  # meta-data reader + cleaner > https://github.com/exiftool/exiftool
 brew "ffmpeg"    # media converter            > https://github.com/FFmpeg/FFmpeg
+brew "chafa"     # terminal image viewer      > https://github.com/hpjansson/chafa
         # Commands
 brew "zoxide"     # better "cd"       > https://github.com/ajeetdsouza/zoxide
 brew "eza"        # better "ls"       > https://github.com/eza-community/eza
-brew "fzf"        # fuzzy search      > https://github.com/junegunn/fzf
 brew "bat"        # pretty code print > https://github.com/sharkdp/bat
 brew "tree"       # directory tree    > https://github.com/Old-Man-Programmer/tree
 brew "fastfetch"  # system info print > https://github.com/fastfetch-cli/fastfetch
@@ -46,6 +46,7 @@ brew "fastfetch"  # system info print > https://github.com/fastfetch-cli/fastfet
 # ==============================
 brew "asmvik/formulae/skhd"            # hotkey daemon     > https://github.com/asmvik/skhd
 brew "FelixKratz/formulae/sketchybar"  # menu bar          > https://github.com/FelixKratz/SketchyBar
+brew "FelixKratz/formulae/borders"     # extra borders     > https://github.com/FelixKratz/JankyBorders
 brew "mole"                            # tui uninstaller   > https://github.com/tw93/Mole
 cask "maccy"                           # clipboard manager > https://github.com/p0deje/Maccy
 

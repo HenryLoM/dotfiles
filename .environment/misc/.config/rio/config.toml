@@ -1,0 +1,61 @@
+# ==============================
+# Window
+# ==============================
+confirm-before-quit = false
+padding             = [0, 4, 2, 4]
+window.macos-use-shadow = false
+window.columns = 63
+window.rows    = 14
+
+# ==============================
+# Shell
+# ==============================
+shell.program = "/opt/homebrew/bin/fish"
+shell.args    = ["--login"]
+
+# ==============================
+# Font
+# ==============================
+draw-bold-text-with-light-colors = false
+grapheme-clustering              = true
+fonts.family               = "cozette"
+fonts.use-drawable-chars   = true
+fonts.bold.weight          = 400
+
+# ==============================
+# Cursor
+# ==============================
+copy-on-select = true
+cursor.shape             = "block"
+cursor.blinking          = true
+cursor.blinking-interval = 650
+effects.trail-cursor                 = true
+effects.trail-cursor-color           = "#f5e0dc"
+effects.trail-cursor-opacity         = 1.0
+effects.trail-cursor-decay           = [100, 300]
+effects.trail-cursor-start-threshold = 0
+
+# ==============================
+# Colors
+# ==============================
+colors.background = "#000000"
+colors.foreground = "#d0d0d0"
+colors.selection-background = "#d0d0d0"
+colors.selection-foreground = "#585b70"
+colors.cursor = "#f5e0dc"
+colors.black   = "#585b70"
+colors.red     = "#f38ba8"
+colors.green   = "#a6e3a1"
+colors.yellow  = "#f9e2af"
+colors.blue    = "#89b4fa"
+colors.magenta = "#cba6f7"
+colors.cyan    = "#89dceb"
+colors.white   = "#a0a0a0"
+colors.light-black   = "#45475a"
+colors.light-red     = "#eba0ac"
+colors.light-green   = "#94e2d5"
+colors.light-yellow  = "#fbbf87"
+colors.light-blue    = "#74c7ec"
+colors.light-magenta = "#f5c2e7"
+colors.light-cyan    = "#b4befe"
+colors.light-white   = "#d0d0d0"

@@ -43,8 +43,8 @@ if status is-interactive
     alias cc "cc -std=c11 -Wall -Wextra -Wpedantic -Wconversion -Wshadow"
         # custom
     alias ef "exiftool -a -u -g2"
-    alias ym 'yt-dlp -f ba         -o "%(title)s.%(ext)s" --cookies-from-browser safari'
-    alias yv 'yt-dlp -f "bv*+ba/b" -o "%(title)s.%(ext)s" --cookies-from-browser safari'
+    alias ym 'yt-dlp -o "%(title)s.%(ext)s" --cookies-from-browser safari -f ba'
+    alias yv 'yt-dlp -o "%(title)s.%(ext)s" --cookies-from-browser safari -f "bv*+ba/b"'
 
     # ==============================
     # Functions
@@ -58,11 +58,6 @@ if status is-interactive
             xattr -c "$f"                                     # macOS info
             SetFile -d (date '+%m/%d/%Y %H:%M:%S') "$f"       # Birth timestamp
         end
-    end
-
-    # WebM to Opus converter
-    function webm-to-opus
-        ffmpeg -i "$argv[1]" -map 0:a:0 -c:a copy (string replace -r '\.webm$' '.opus' "$argv[1]")
     end
 
     # SSH key creator
@@ -84,7 +79,7 @@ if status is-interactive
         mkdir -p "$DST"
             # Sync dotfiles
         cp -f "$SRC/starship.toml" "$DST/starship.toml"
-        for dir in fish kitty skhd sketchybar borders fastfetch mpv
+        for dir in fish rio skhd sketchybar borders fastfetch mpv
             rm -rf "$DST/$dir"
             cp -R  "$SRC/$dir" "$DST/$dir"
         end

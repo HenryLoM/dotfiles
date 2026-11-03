@@ -32,8 +32,7 @@ Brewfile management
 ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
 
 ⁃ muz     → nearly suckless local music player
-⁃ chare   → minimal local file sharing
-⁃ youtube → terminal YouTube client
+⁃ wallen  → wallpaper selector for macOS
 
 ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
 █ █ █▀▄▀█ █▀▀ ▀█▀ ▄▀█ █ █   █▀ █▀▀ ▀█▀ ▀█▀ █ █▄ █ █▀▀ █▀

@@ -4,6 +4,4 @@
 # Applications
 # ==============================
 alt - return : open -a  "Finder"
-alt - k      : open -na "kitty"
-alt - s      : open -a  "Safari"
-alt - v      : open -a  "Visual Studio Code"
+alt - space  : open -na "rio"

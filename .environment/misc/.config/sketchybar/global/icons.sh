@@ -8,7 +8,7 @@ icons_battery_idle=󱐌
 icons_battery_charging=󱐋
 icons_trash_idle=󰩺
 icons_trash_empty=󰩹
-icons_clipboard=󰅏
+icons_clipboard=󰏢
 
 # ==============================
 # Left

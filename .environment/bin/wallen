@@ -1,0 +1,169 @@
+#!/usr/bin/env bash
+
+# ==============================
+# Help
+# ==============================
+case "${1:-}" in --help|-help|help|--h|-h|h)
+    echo "wallen (v1.1) - wallpaper selector for macOS"
+    echo
+    echo "Usage: wallen <wallpaper-directory>"
+    echo
+    echo "Controls:"
+    echo "    ↑ / k               move up"
+    echo "    ↓ / j               move down"
+    echo "    Enter               keep selection"
+    echo "    q / Esc             restore original wallpaper"
+    echo
+    echo "Dependencies: osascript tput"
+    echo "Cache: ~/.cache/wallen/"
+    exit 0
+    ;;
+esac
+
+# ==============================
+# Dependencies
+# ==============================
+dependencies=(osascript tput)
+for cmd in "${dependencies[@]}"; do
+    command -v "$cmd" >/dev/null 2>&1 || { echo "wallen: missing dependency: $cmd" >&2; missing=1; }
+done
+(( ${missing:-0} )) && exit 1
+
+# ==============================
+# Cache
+# ==============================
+CACHE_DIR="$HOME/.cache/wallen"
+CACHED_PATH="$CACHE_DIR/path"
+mkdir -p "$CACHE_DIR"
+
+ROOT="${1:-$(cat "$CACHED_PATH" 2>/dev/null)}"
+[[ -n "$ROOT" ]] || { echo "wallen: usage: wallen <wallpaper-directory>" >&2; exit 1; }
+[[ -d "$ROOT" ]] || { echo "wallen: $ROOT is not a directory"            >&2; exit 1; }
+echo "$ROOT" > "$CACHED_PATH"
+
+# ==============================
+# State
+# ==============================
+declare -a WALLPAPERS=() INITIAL_WALLPAPERS=()
+CURSOR=0
+KEEP_SELECTION=0
+UI_STARTED=0
+
+# ==============================
+# Wallpapers control
+# ==============================
+load_wallpapers() {
+    local file
+    while IFS= read -r file; do WALLPAPERS+=("$file"); done < <(
+        find "$ROOT" -type f \( \
+            -iname "*.jpg"  -o -iname "*.jpeg" -o -iname "*.png" -o \
+            -iname "*.heic" -o -iname "*.heif" -o -iname "*.tif" -o \
+            -iname "*.tiff" -o -iname "*.bmp"  -o -iname "*.gif"    \
+        \) -print | LC_ALL=C sort -f
+    )
+    (( ${#WALLPAPERS[@]} > 0 )) || { printf "wallen: no supported wallpaper images found in %s\n" "$ROOT" >&2; exit 1; }
+}
+
+read_initial_wallpaper() {
+    local initials
+    initials=$(osascript \
+        -e 'tell application "System Events"' \
+        -e 'set desktopList to every desktop' \
+        -e 'set resultText to ""' \
+        -e 'repeat with i from 1 to (count of desktopList)' \
+        -e 'if i > 1 then set resultText to resultText & (ASCII character 30)' \
+        -e 'set resultText to resultText & (picture of item i of desktopList as text)' \
+        -e 'end repeat' \
+        -e 'end tell' \
+        -e 'return resultText'
+    ) || { echo "wallen: could not read the current desktop wallpapers" >&2; exit 1; }
+    [[ -n "$initials" ]] || { echo "wallen: could not read the current desktop wallpapers" >&2; exit 1; }
+    IFS=$'\034' read -r -a INITIAL_WALLPAPERS <<< "$initials"
+    (( ${#INITIAL_WALLPAPERS[@]} > 0 )) || { echo "wallen: could not read the current desktop wallpapers" >&2; exit 1; }
+}
+
+restore_initial_wallpaper() {
+    osascript \
+        -e 'on run argv' \
+        -e 'tell application "System Events"' \
+        -e 'set desktopList to every desktop' \
+        -e 'repeat with i from 1 to (count of desktopList)' \
+        -e 'if i ≤ (count of argv) then set picture of item i of desktopList to POSIX file (item i of argv)' \
+        -e 'end repeat' \
+        -e 'end tell' \
+        -e 'end run' "${INITIAL_WALLPAPERS[@]}"
+}
+
+set_wallpaper() {
+    osascript \
+        -e 'on run argv' \
+        -e 'tell application "System Events" to set picture of every desktop to POSIX file (item 1 of argv)' \
+        -e 'end run' "$1"
+}
+
+preview_wallpaper() {
+    set_wallpaper "${WALLPAPERS[CURSOR]}" || { printf "wallen: failed to preview_wallpaper: %s\n" "${WALLPAPERS[CURSOR]}" >&2; exit 1; }
+}
+
+# ==============================
+# UI & management
+# ==============================
+draw() {
+    local cols lines rows first idx i name
+    cols=$(tput cols); lines=$(tput lines)
+    (( cols  < 10 )) && cols=10
+    (( lines < 6  )) && lines=6
+    rows=$((lines - 3)); (( rows < 1 )) && rows=1
+    first=$((CURSOR - rows / 2))
+    (( first < 0 )) && first=0
+    (( first > ${#WALLPAPERS[@]} - rows )) && first=$(( ${#WALLPAPERS[@]} - rows ))
+    (( first < 0 )) && first=0
+    printf "\e[H\e[2J\e[1;%dH\e[1;97mwallen\e[0m" "$(( (cols - 6) / 2 + 1 ))"
+    for ((i = 0; i < rows && first + i < ${#WALLPAPERS[@]}; i++)); do
+        idx=$((first + i))
+        name="${WALLPAPERS[idx]##*/}"
+        (( ${#name} > cols - 3 )) && name="${name:0:$((cols - 6))}..."
+        printf "\e[%d;1H" "$((i + 3))"
+        (( idx == CURSOR )) && printf "\e[7m"
+        printf " %-*s\e[0m\n" "$((cols - 2))" "$name"
+    done
+}
+
+read_key() {
+    local key seq
+    IFS= read -rsn1 key || { echo quit; return; }
+    [[ "$key" == $'\e' ]] && { IFS= read -rsn2 -t .1 seq; key+="$seq"; }
+    case "$key" in
+        $'\e[A'|k) echo up    ;;
+        $'\e[B'|j) echo down  ;;
+        $'\e'|q)   echo quit  ;;
+        "")        echo enter ;;
+    esac
+}
+
+cleanup() {
+    (( UI_STARTED     )) && printf "\e[?25h\e[0m\e[?1049l"
+    (( KEEP_SELECTION )) && return
+    restore_initial_wallpaper || echo "wallen: failed to restore the original desktop wallpapers" >&2
+}
+
+# ==============================
+# Run
+# ==============================
+trap cleanup EXIT
+printf "\e[?1049h\e[?25l"
+UI_STARTED=1
+load_wallpapers
+read_initial_wallpaper
+preview_wallpaper
+
+while :; do
+    draw
+    key=$(read_key)
+    case "$key" in
+        up)    (( CURSOR > 0 ))                     && { ((CURSOR--)); preview_wallpaper; } ;;
+        down)  (( CURSOR < ${#WALLPAPERS[@]} - 1 )) && { ((CURSOR++)); preview_wallpaper; } ;;
+        enter) KEEP_SELECTION=1; exit 0 ;;
+        quit)  exit 0 ;;
+    esac
+done
